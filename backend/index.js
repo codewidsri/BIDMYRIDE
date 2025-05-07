@@ -1,6 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import ConnectDatabase from './database/ConnectDatabase.js'
+
 dotenv.config()
 
 const app=express()
@@ -8,10 +10,8 @@ const app=express()
 app.use(cors())
 app.use(express.json())
 
-app.get('/',(req,res)=>{
-    res.send('from server da mango dkjdfldfkl')
-})
+ConnectDatabase();
 
 app.listen(process.env.PORT,()=>{
-    console.log(`server is listed to the port ${process.env.PORT}`)
+    console.log(`server is listening to the port ${process.env.PORT}`)
 })
