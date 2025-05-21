@@ -1,7 +1,9 @@
 import { Container, Box, Typography, Paper, Button, TextField, Collapse, Alert, IconButton, Grid, FormControlLabel, Checkbox, Link } from "@mui/material";
+import { ToastContainer, ToastBody, Toast } from 'react-bootstrap'
 import { useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios'
 
 function RiderRegister() {
     const navigate = useNavigate()
@@ -42,13 +44,37 @@ function RiderRegister() {
         setform({ ...form, [e.target.name]: e.target.value })
     }
 
-    function HandleSubmit(e) {
+    async function HandleSubmit(e) {
         e.preventDefault();
-        console.log(form)
+        const datatosend = {
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            password: form.password,
+            address: form.address,
+            location: {
+                type: 'Point',
+                coordinates: [parseFloat(form.longitude), parseFloat(form.latitude)]
+            }
+        }
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND}/rider/register`, datatosend)
+        } catch (error) {
+
+        }
     }
 
     return (
         <>
+            <ToastContainer position="top-center" className="p-3">
+                <Toast bg="info" show={show} onClose={() => setshow(!show)} delay={4000} autohide>
+                    <Toast.Header>
+                        <strong className="me-auto">Notification</strong>
+                        <small>Just now</small>
+                    </Toast.Header>
+                    <ToastBody>{message}</ToastBody>
+                </Toast>
+            </ToastContainer>
             <Container maxWidth='sm' sx={{ p: 3 }}>
                 <Collapse in={open}>
                     <Alert severity={type} action={<IconButton onClick={() => setopen(false)}><CloseIcon></CloseIcon></IconButton>}>

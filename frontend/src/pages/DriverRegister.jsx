@@ -48,7 +48,7 @@ function DriverRegister() {
     }
     return (
         <>
-            <Container maxWidth='lg' sx={{ p: 3 }}>
+            <Container maxWidth='sm' sx={{ p: 3 }}>
                 <Collapse in={open}>
                     <Alert severity={type} action={<IconButton onClick={() => setopen(false)}><CloseIcon></CloseIcon></IconButton>}>
                         {showerror}
@@ -56,7 +56,7 @@ function DriverRegister() {
                 </Collapse>
                 <Paper elevation={5}>
                     <Box component='form' onSubmit={HandleSubmit} sx={{ p: 4 }}>
-                        <Typography variant='h5' gutterBottom align='center' sx={{ fontWeight: "bold" }}>Rider Registration</Typography>
+                        <Typography variant='h5' gutterBottom align='center' sx={{ fontWeight: "bold" }}>Driver Registration</Typography>
                         <Grid container spacing={1}>
                             <Grid size={4}>
                                 <TextField
@@ -142,7 +142,7 @@ function DriverRegister() {
                                     rows={4}
                                 />
                             </Grid>
-                            <Grid size={4}>
+                            <Grid size={6}>
                                 <TextField
                                     type="number"
                                     name="vehiclenumber"
@@ -154,11 +154,11 @@ function DriverRegister() {
                                     onChange={HandleChange}
                                 />
                             </Grid>
-                            <Grid size={4} display={'flex'} alignItems={'center'}>
+                            <Grid size={6} display={'flex'} alignItems={'center'}>
                                 <Button onClick={getLocation} fullWidth variant="contained" sx={{ padding: '15px' }}>Get My Location</Button>
                             </Grid>
-                            <Grid size={4} display={'flex'} alignItems={'center'}>
-                                <FormControlLabel control={<Checkbox onChange={() => setshowpassword(!showpassword)} />} label='show password' />
+                            <Grid size={12} display={'flex'} alignItems={'center'}>
+                                <FormControlLabel control={<Checkbox onChange={() => setshowpassword(!showpassword)} />} required label='show password' />
                             </Grid>
                             <Grid size={12}>
                                 <Button type="submit" variant="contained" color="success" fullWidth>Register</Button>

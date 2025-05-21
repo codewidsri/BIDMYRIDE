@@ -2,25 +2,25 @@ import { Container, Box, Card, Typography, CardMedia, CardActions, Button } from
 
 function SectionThree() {
     return (<>
-        <Container sx={{ padding: '10px', marginTop: '10px' }} maxWidth='lg'>
-            <Typography variant='h4' gutterBottom sx={{ fontWeight: 'bold' }}>Our Services</Typography>
+        <Container sx={{ marginTop: '5%' }}>
+            <Typography variant='h3' gutterBottom sx={{ fontWeight: 'bolder' }}>Our Services</Typography>
             <Box component='section' sx={{ display: 'flex' }} alignItems='center' display='flex' justifyContent='center'>
                 <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
                     <CardMedia component='img' image='/bike.webp' />
                     <CardActions disableSpacing>
-                        <Button size='large' variant='outlined' color='warning'>Bike</Button>
+                        <Button size='large' variant='contained' color='warning'>Bike</Button>
                     </CardActions>
                 </Card>
                 <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
                     <CardMedia component='img' image='/auto.webp' />
                     <CardActions disableSpacing>
-                        <Button size='large' variant='outlined' color='warning'>Auto</Button>
+                        <Button size='large' variant='contained' color='warning'>Auto</Button>
                     </CardActions>
                 </Card>
                 <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
                     <CardMedia component='img' image='/car.webp' />
                     <CardActions disableSpacing>
-                        <Button size='large' variant='outlined' color='warning'>Cab</Button>
+                        <Button size='large' variant='contained' color='warning'>Cab</Button>
                     </CardActions>
                 </Card>
             </Box>

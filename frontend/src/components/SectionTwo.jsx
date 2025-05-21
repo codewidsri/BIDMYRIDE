@@ -1,38 +1,44 @@
-import { Box, Card, Container, Typography, CardContent, CardActions, Button, Paper, CardMedia } from "@mui/material"
-import { useNavigate } from "react-router-dom"
-import SendIcon from '@mui/icons-material/Send';
+import { Container, Paper, Grid, TextField, Button, Box } from "@mui/material"
+import ExploreIcon from '@mui/icons-material/Explore';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 function SectionTwo() {
-    const navigate = useNavigate()
+    function HandleChange(e){
+        e.preventDefault();
+    }
     return (<>
-        <Container sx={{ padding: '10px', marginTop: '10px' }} maxWidth='lg'>
-            <Box component='section'>
-                <Paper elevation={5} maxWidth='lg' sx={{ display: 'flex', padding: '2%' }}>
-                    <Card sx={{ maxWidth: '350px', padding: '2%', marginRight: '3%', height: 'fit-content' }} variant="none">
-                        <CardMedia component='img' image="/two.png" height={200} />
-                        <CardContent>
-                            <Typography variant="body1" gutterBottom sx={{ fontWeight: 'bold' }}>Book Cabs, Bikes, Auto for your Comfortable and Affordable Price</Typography>
-                        </CardContent>
-                        <CardActions disableSpacing>
-                            <Button variant="outlined" color="success" onClick={() => navigate('/riderlogin')}>Book a Ride &nbsp;<SendIcon /></Button>
-                        </CardActions>
-                    </Card>
-                    <Card sx={{ maxWidth: '350px', padding: '2%', marginRight: '3%', height: 'fit-content' }} variant="none">
-                        <CardMedia component='img' image="/one.jpg" />
-                        <CardContent>
-                            <Typography variant="body1" gutterBottom sx={{ fontWeight: 'bold' }}>Join with us to provide most Comfortable and Affordable Rides</Typography>
-                        </CardContent>
-                        <CardActions disableSpacing >
-                            <Button variant="outlined" color="success" onClick={() => navigate('/driverlogin')}>Bid a Ride &nbsp;<SendIcon /></Button>
-                        </CardActions>
-                    </Card>
-                    <Card sx={{ maxWidth: '350px' }}>
-                        <CardMedia component='img' image="/three.jpg" />
-                        <CardContent>
-                            <Typography variant="h6" gutterBottom align="center" sx={{ fontWeight: 'bolder' }}>Safer, better quality, and a city at your fingertips</Typography>
-                        </CardContent>
-                    </Card>
-                </Paper>
-            </Box>
+        <Container sx={{ marginTop: '5%'}}>
+            <Paper elevation={1}>
+                <Box component={'form'} onSubmit={HandleChange}>
+                    <Grid container spacing={5} sx={{ padding: '5%' }}>
+                        <Grid size={4} display={'flex'} alignItems={'flex-end'}>
+                            <GpsFixedIcon sx={{ mr: 1, my: 3 }} />
+                            <TextField
+                                type="text"
+                                name="pickup"
+                                variant="outlined"
+                                label="Enter Pickup Location"
+                                margin="normal"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={4} display={'flex'} alignItems={'flex-end'}>
+                            <LocationOnIcon sx={{ mr: 1, my: 3 }} />
+                            <TextField
+                                type="text"
+                                name="drop"
+                                variant="outlined"
+                                label="Enter Drop Location"
+                                margin="normal"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={4} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                            <Button variant="contained" color="warning" >Search &nbsp;<ExploreIcon fontSize="large" /></Button>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Paper>
         </Container>
     </>)
 }
