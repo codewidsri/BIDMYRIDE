@@ -1,44 +1,35 @@
-import { Container, Paper, Grid, TextField, Button, Box } from "@mui/material"
+import { Container, Grid, Box, Typography, Button } from "@mui/material"
+import { Form, InputGroup } from 'react-bootstrap'
 import ExploreIcon from '@mui/icons-material/Explore';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import MapComponent from "./MapComponent";
+
 function SectionTwo() {
-    function HandleChange(e){
+    function HandleChange(e) {
         e.preventDefault();
     }
     return (<>
-        <Container sx={{ marginTop: '5%'}}>
-            <Paper elevation={1}>
-                <Box component={'form'} onSubmit={HandleChange}>
-                    <Grid container spacing={5} sx={{ padding: '5%' }}>
-                        <Grid size={4} display={'flex'} alignItems={'flex-end'}>
-                            <GpsFixedIcon sx={{ mr: 1, my: 3 }} />
-                            <TextField
-                                type="text"
-                                name="pickup"
-                                variant="outlined"
-                                label="Enter Pickup Location"
-                                margin="normal"
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid size={4} display={'flex'} alignItems={'flex-end'}>
-                            <LocationOnIcon sx={{ mr: 1, my: 3 }} />
-                            <TextField
-                                type="text"
-                                name="drop"
-                                variant="outlined"
-                                label="Enter Drop Location"
-                                margin="normal"
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid size={4} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                            <Button variant="contained" color="warning" >Search &nbsp;<ExploreIcon fontSize="large" /></Button>
-                        </Grid>
+        <Container sx={{ marginTop: '5%' }}>
+            <Box component={'form'} onSubmit={HandleChange}>
+                <Grid container spacing={5} display={'flex'} alignItems={'center'}>
+                    <Grid size={6}>
+                        <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bolder' }}>Go Anywhere with BidMyRide</Typography>
+                        <InputGroup className="mb-5">
+                            <InputGroup.Text><GpsFixedIcon /></InputGroup.Text>
+                            <Form.Control type="text" placeholder="PickUpLocation" size="lg" />
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text><LocationOnIcon /></InputGroup.Text>
+                            <Form.Control type="text" placeholder="DropOffLocation" size="lg" />
+                        </InputGroup>
+                        <Button sx={{ padding: '10px', backgroundColor: 'ButtonText', color: 'wheat', marginTop: '10px',fontWeight:'bold' }} fullWidth><ExploreIcon />&nbsp;Search</Button>
                     </Grid>
-                </Box>
-            </Paper>
+                    <Grid size={6}>
+                        <MapComponent />
+                    </Grid>
+                </Grid>
+            </Box>
         </Container>
     </>)
 }

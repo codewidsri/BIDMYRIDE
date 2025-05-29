@@ -7,7 +7,7 @@ function SectionOne() {
     return (<>
         <Container sx={{ marginTop: '5%' }}>
             <Box component='section'>
-                <Grid container sx={{ display: 'flex', padding: '5%', alignItems: 'center' }}>
+                <Grid container sx={{ display: 'flex', alignItems: 'center' }}>
                     <Grid size={6}>
                         <Typography variant="h3" sx={{ fontWeight: 'bolder' }}>BidMyRide</Typography>
                         <Typography variant="h6" gutterBottom>Safer, better quality, and a city at your fingertips</Typography>

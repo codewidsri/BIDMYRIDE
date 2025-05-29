@@ -158,7 +158,7 @@ function DriverRegister() {
                                 <Button onClick={getLocation} fullWidth variant="contained" sx={{ padding: '15px' }}>Get My Location</Button>
                             </Grid>
                             <Grid size={12} display={'flex'} alignItems={'center'}>
-                                <FormControlLabel control={<Checkbox onChange={() => setshowpassword(!showpassword)} />} required label='show password' />
+                                <FormControlLabel control={<Checkbox onChange={() => setshowpassword(!showpassword)} />} label='show password' />
                             </Grid>
                             <Grid size={12}>
                                 <Button type="submit" variant="contained" color="success" fullWidth>Register</Button>

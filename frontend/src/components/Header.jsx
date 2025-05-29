@@ -7,7 +7,7 @@ function Header(){
         <>
             <Navbar className="bg-dark">
                 <Container>
-                    <Navbar.Brand href="#"><Link to='/' className="text-decoration-none fw-bold fs-4">BIDMYRIDE</Link></Navbar.Brand>
+                    <Navbar.Brand><Link to='/' className="text-decoration-none fw-bold fs-4">BIDMYRIDE</Link></Navbar.Brand>
                     <Nav>
                         <Nav.Item>
                             <Link to='/' className="text-decoration-none text-white me-3 nav-hover">Home</Link>
