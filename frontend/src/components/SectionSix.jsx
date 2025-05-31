@@ -19,12 +19,12 @@ function SectionSix() {
                         </Grid>
                         <Grid size={6}>
                             <Grid size={12}>
-                                <Typography variant="h3" sx={{ fontWeight: 'bolder' }}>Flexible Hours & </Typography>
-                                <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bolder' }}>High Earning</Typography>
+                                <Typography variant="h4" sx={{ fontWeight: 'bolder' }}>Flexible Hours & </Typography>
+                                <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bolder' }}>High Earning</Typography>
                             </Grid>
                             <Grid size={12}>
-                                <Typography variant="h5" gutterBottom>Join as BidMyRide Captain and earn on your own terms. Driver whenever you want.</Typography>
-                                <Button sx={{padding:'10px', backgroundColor:'ButtonText', color:'wheat',marginTop:'10px'}}>Start Earning &nbsp;<KeyboardDoubleArrowRightIcon /></Button>
+                                <Typography variant="h6" gutterBottom>Join as BidMyRide Captain and earn on your own terms. Driver whenever you want.</Typography>
+                                <Button sx={{padding:'15px', backgroundColor:'ButtonText', color:'white',marginTop:'10px',fontWeight:'bold',borderRadius:'10px'}}>Start Earning &nbsp;<KeyboardDoubleArrowRightIcon /></Button>
                             </Grid>
                         </Grid>
                     </Grid>

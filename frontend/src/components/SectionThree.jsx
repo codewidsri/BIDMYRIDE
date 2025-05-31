@@ -3,7 +3,7 @@ import { Container, Box, Card, Typography, CardMedia, CardActions, Button } from
 function SectionThree() {
     return (<>
         <Container sx={{ marginTop: '5%' }}>
-            <Typography variant='h3' gutterBottom sx={{ fontWeight: 'bolder' }}>Our Services</Typography>
+            <Typography variant='h4' gutterBottom sx={{ fontWeight: 'bolder' }}>Our Services</Typography>
             <Box component='section' sx={{ display: 'flex' }} alignItems='center' display='flex' justifyContent='center'>
                 <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
                     <CardMedia component='img' image='/bike.webp' />

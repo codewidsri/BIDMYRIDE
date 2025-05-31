@@ -14,7 +14,7 @@ function SectionTwo() {
             <Box component={'form'} onSubmit={HandleChange}>
                 <Grid container spacing={5} display={'flex'} alignItems={'center'}>
                     <Grid size={6}>
-                        <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bolder' }}>Go Anywhere with BidMyRide</Typography>
+                        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bolder' }}>Go Anywhere with BidMyRide</Typography>
                         <InputGroup className="mb-5">
                             <InputGroup.Text><GpsFixedIcon /></InputGroup.Text>
                             <Form.Control type="text" placeholder="PickUpLocation" size="lg" />
