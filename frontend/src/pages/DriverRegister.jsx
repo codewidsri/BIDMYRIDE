@@ -2,12 +2,20 @@ import { Container, Box, Paper, Grid, Button, Typography, TextField, Collapse, A
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
+import axios from 'axios'
+import { Toast, ToastContainer } from 'react-bootstrap'
 
 function DriverRegister() {
     const navigate = useNavigate()
+
     const [open, setopen] = useState(false)
-    const [showerror, setshowerror] = useState('')
-    const [type, settype] = useState('')
+    const [error, seterror] = useState('')
+    const [errortype, seterrortype] = useState('')
+
+    const [show, setshow] = useState(false);
+    const [showmessage, setshowmessage] = useState('')
+    const [showmessagetype, setshowmessagetype] = useState('')
+
     const [showpassword, setshowpassword] = useState(false)
     const [form, setform] = useState({
         name: '',
@@ -18,44 +26,90 @@ function DriverRegister() {
         longitude: '',
         latitude: '',
         vehicletype: '',
-        capacity: '',
-        vehiclenumber: ''
+        vehiclenumber: '',
+        capacity: ''
     })
+
     function getLocation() {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
                 setform((prev) => ({ ...prev, longitude: position.coords.longitude, latitude: position.coords.latitude }))
-                setshowerror("location data is retrieved successfully")
+                seterror("location data is retrieved successfully")
                 setopen(true)
-                settype('success')
+                seterrortype('success')
             }, (error) => {
-                setshowerror(error)
+                seterror(error)
                 setopen(true);
-                settype('info')
+                seterrortype('info')
             })
         } else {
-            setshowerror("location is not supported by the browser please use another one")
+            seterror("location is not supported by the browser please use another one")
             setopen(true);
-            settype('error')
+            seterrortype('error')
         }
     }
+
     function HandleChange(e) {
         setform({ ...form, [e.target.name]: e.target.value })
     }
-    function HandleSubmit(e) {
+
+    async function HandleSubmit(e) {
         e.preventDefault();
-        console.log(form)
+        const datatosend = {
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            password: form.password,
+            address: form.address,
+            location: {
+                type: 'Point',
+                coordinates: [parseFloat(form.longitude), parseFloat(form.latitude)]
+            },
+            vehicletype: form.vehicletype,
+            vehiclenumber: form.vehiclenumber,
+            capacity: form.capacity
+        }
+        try {
+            const configuration = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND}/driver/register`, datatosend, configuration)
+            setshow(true)
+            setshowmessage(response.data.message)
+            setshowmessagetype('success')
+            setTimeout(() => {
+                navigate('/riderlogin')
+            }, 3000);
+        } catch (error) {
+            setshow(true)
+            setshowmessage("Error occured!")
+            setshowmessagetype("danger")
+        }
     }
+
     return (
         <>
+            <ToastContainer position="top-center" className="p-3 m-3">
+                <Toast bg={showmessagetype} show={show} onClose={() => setshow(!show)} delay={5000} autohide className="text-white">
+                    <Toast.Header>
+                        <strong className="me-auto">Notification</strong>
+                        <small>just now</small>
+                    </Toast.Header>
+                    <Toast.Body className="text-center">
+                        {showmessage}
+                    </Toast.Body>
+                </Toast>
+            </ToastContainer>
             <Container maxWidth='sm' sx={{ p: 3 }}>
                 <Collapse in={open}>
-                    <Alert severity={type} action={<IconButton onClick={() => setopen(false)}><CloseIcon></CloseIcon></IconButton>}>
-                        {showerror}
+                    <Alert severity={errortype} action={<IconButton onClick={() => setopen(false)}><CloseIcon /></IconButton>}>
+                        {error}
                     </Alert>
                 </Collapse>
                 <Paper elevation={5}>
-                    <Box component='form' onSubmit={HandleSubmit} sx={{ p: 4 }}>
+                    <Box component='form' onSubmit={HandleSubmit} sx={{ p: 3 }}>
                         <Typography variant='h5' gutterBottom align='center' sx={{ fontWeight: "bold" }}>Driver Registration</Typography>
                         <Grid container spacing={1}>
                             <Grid size={4}>
@@ -144,7 +198,7 @@ function DriverRegister() {
                             </Grid>
                             <Grid size={6}>
                                 <TextField
-                                    type="number"
+                                    type="text"
                                     name="vehiclenumber"
                                     label="Vehicle Number"
                                     required
@@ -164,9 +218,7 @@ function DriverRegister() {
                                 <Button type="submit" variant="contained" color="success" fullWidth>Register</Button>
                             </Grid>
                         </Grid>
-                    </Box>
-                    <Box component={'div'} display={'flex'} flexDirection={'column'} alignItems={'center'} padding={1}>
-                        <Link component={'button'} onClick={() => navigate('/driverlogin')}>Have an Account? Log in</Link>
+                        <Link component={'button'} sx={{ width: '100%' }} onClick={() => navigate('/driverlogin')}>Have an Account? Log in</Link>
                     </Box>
                 </Paper>
             </Container>

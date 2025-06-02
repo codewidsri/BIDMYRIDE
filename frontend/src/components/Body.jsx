@@ -7,11 +7,14 @@ import SectionSix from "./SectionSix.jsx"
 import SectionSeven from "./SectionSeven.jsx"
 import SectionEight from "./SectionEight.jsx"
 import SectionNine from "./SectionNine.jsx"
+import SectionTen from "./SectionTen.jsx"
+import SectionEleven from "./SectionEleven.jsx"
+import SectionTwelve from "./SectionTwelve.jsx"
 
 function Body() {
     return (
         <>
-            {/* <SectionOne /> */}
+            <SectionOne />
             <SectionTwo />
             <SectionThree />
             <SectionFour />
@@ -20,6 +23,9 @@ function Body() {
             <SectionSeven />
             <SectionEight />
             <SectionNine />
+            <SectionTen />
+            <SectionEleven />
+            <SectionTwelve />
         </>
     )
 }

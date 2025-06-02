@@ -1,18 +1,20 @@
-import { Box, Button, CardMedia, Container, Grid, Typography } from "@mui/material";
+import { Container, Box, Typography, CardMedia, Grid, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 function SectionFour() {
     return (
         <>
-            <Container sx={{ marginTop: '5%' }}>
+            <Container sx={{ marginTop: "5%" }}>
                 <Box component={'section'}>
                     <Grid container spacing={5} display={'flex'} alignItems={'center'}>
                         <Grid size={6}>
-                            <CardMedia component={'img'} height={350} image="/three.jpg" sx={{ margin: '10px', borderRadius: '20px' }} />
+                            <CardMedia component={'img'} image="./Airport-Fall.webp" sx={{ borderRadius: '20px' }} />
                         </Grid>
                         <Grid size={6}>
-                            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bolder' }}>Safety for all</Typography>
-                            <Typography variant="h6" gutterBottom>At BidMyRide your safety is out priority. We're dedicated to making every ride safe and comfortable</Typography>
-                            <Button sx={{ fontSize: '20px' , fontWeight:'bolder'}}>Know More</Button>
+                            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bolder' }}>Login to see your recent activity</Typography>
+                            <Typography variant="h6">View past trips, tailored suggestions, support resources, and more</Typography>
+                            <Button sx={{ padding: '15px', backgroundColor: 'ButtonText', color: 'white', marginTop: '10px', fontWeight: 'bold', borderRadius: '10px' }}>Log in to your Account</Button>
+                            <Link to={'/riderregister'} className="d-block my-3">Don't have account? sign up</Link>
                         </Grid>
                     </Grid>
                 </Box>

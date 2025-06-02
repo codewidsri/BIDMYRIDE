@@ -9,18 +9,18 @@ import ProtectedRoute from './context/ProtectedRoute.jsx'
 
 function App() {
   return (
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/riderlogin' element={<RiderLogin />} />
-        <Route path='/riderregister' element={<RiderRegister />} />
-        <Route path='/driverlogin' element={<DriverLogin />} />
-        <Route path='/driverregister' element={<DriverRegister />} />
-        <Route path='/profile' element={
-          <ProtectedRoute>
-            <Profile /> 
-          </ProtectedRoute>
-          } />
-      </Routes>
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path='/riderlogin' element={<RiderLogin />} />
+      <Route path='/riderregister' element={<RiderRegister />} />
+      <Route path='/driverlogin' element={<DriverLogin />} />
+      <Route path='/driverregister' element={<DriverRegister />} />
+      <Route path='/profile' element={
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      } />
+    </Routes>
   )
 }
 

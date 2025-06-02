@@ -8,8 +8,8 @@ const DriverSchema = new mongoose.Schema({
     address: { type: String, required: true },
     location: { type: { type: String, default: 'Point' }, coordinates: [Number] },
     vehicletype: { type: String, enum: ['bike', 'auto', 'car'], required: true },
-    capacity: { type: Number, required: true },
     vehiclenumber: { type: String, required: true },
+    capacity: { type: Number, required: true },
     isavailable: { type: Boolean, default: false }
 }, { timestamps: true })
 

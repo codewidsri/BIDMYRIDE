@@ -1,35 +1,31 @@
-import { Container, Box, Grid, CardMedia, Typography } from "@mui/material";
+import { Container, Box, Card, Typography, CardMedia, CardActions, Button } from '@mui/material'
 
 function SectionFive() {
-    return (
-        <>
-            <Container sx={{ marginTop: '5%'}}>
-                <Box component={'section'}>
-                    <Grid container spacing={5} display={'flex'} alignItems={'center'}> 
-                        <Grid size={6}>
-                            <Grid size={12}>
-                                <Typography variant="h4" sx={{fontWeight:'bolder'}}>Get Quick Rides</Typography>
-                                <Typography variant="h4" gutterBottom sx={{fontWeight:'bolder'}}>Low Fares</Typography>
-                            </Grid>
-                            <Grid size={12}>
-                                <Typography variant="h6" gutterBottom>In BidMyRide we ensure our customer get rides quickly at the most affordable prices</Typography>
-                            </Grid>
-                        </Grid>
-                        <Grid size={6}>
-                            <Grid size={6} display={'flex'}>
-                                <CardMedia component={'img'} image="/nine.jpg" sx={{margin:'10px', borderRadius:'20px'}}/>
-                                <CardMedia component={'img'} image="/eight.jpeg" sx={{margin:'10px', borderRadius:'20px'}}/>
-                            </Grid>
-                            <Grid size={6} display={'flex'}>
-                                <CardMedia component={'img'} image="/ten.jpg" sx={{margin:'10px', borderRadius:'20px'}}/>
-                                <CardMedia component={'img'} image="/eleven.jpg" sx={{margin:'10px', borderRadius:'20px'}}/>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Container>
-        </>
-    )
+    return (<>
+        <Container sx={{ marginTop: '5%' }}>
+            <Typography variant='h4' gutterBottom sx={{ fontWeight: 'bolder' }}>Our Services</Typography>
+            <Box component='section' sx={{ display: 'flex' }} alignItems='center' display='flex' justifyContent='center'>
+                <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
+                    <CardMedia component='img' image='/bike.webp' />
+                    <CardActions disableSpacing>
+                        <Button size='large' variant='contained' color='warning'>Bike</Button>
+                    </CardActions>
+                </Card>
+                <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
+                    <CardMedia component='img' image='/auto.webp' />
+                    <CardActions disableSpacing>
+                        <Button size='large' variant='contained' color='warning'>Auto</Button>
+                    </CardActions>
+                </Card>
+                <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
+                    <CardMedia component='img' image='/car.webp' />
+                    <CardActions disableSpacing>
+                        <Button size='large' variant='contained' color='warning'>Cab</Button>
+                    </CardActions>
+                </Card>
+            </Box>
+        </Container>
+    </>)
 }
 
 export default SectionFive;

@@ -1,31 +1,26 @@
-import { Container, Box, Card, Typography, CardMedia, CardActions, Button } from '@mui/material'
+import { Container, Box, Typography, Grid, CardMedia, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 function SectionThree() {
-    return (<>
-        <Container sx={{ marginTop: '5%' }}>
-            <Typography variant='h4' gutterBottom sx={{ fontWeight: 'bolder' }}>Our Services</Typography>
-            <Box component='section' sx={{ display: 'flex' }} alignItems='center' display='flex' justifyContent='center'>
-                <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
-                    <CardMedia component='img' image='/bike.webp' />
-                    <CardActions disableSpacing>
-                        <Button size='large' variant='contained' color='warning'>Bike</Button>
-                    </CardActions>
-                </Card>
-                <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
-                    <CardMedia component='img' image='/auto.webp' />
-                    <CardActions disableSpacing>
-                        <Button size='large' variant='contained' color='warning'>Auto</Button>
-                    </CardActions>
-                </Card>
-                <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
-                    <CardMedia component='img' image='/car.webp' />
-                    <CardActions disableSpacing>
-                        <Button size='large' variant='contained' color='warning'>Cab</Button>
-                    </CardActions>
-                </Card>
-            </Box>
-        </Container>
-    </>)
+    return (
+        <>
+            <Container sx={{ marginTop: '5%' }}>
+                <Box component={'section'}>
+                    <Grid container spacing={5} display={'flex'} alignItems={'center'}>
+                        <Grid size={6}>
+                            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bolder' }}>Drive when you want, make what you need</Typography>
+                            <Typography variant="h6" gutterBottom>Make money on your Schedule with deliveries or rides- or both.</Typography>
+                            <Button sx={{ padding: '15px', backgroundColor: 'ButtonText', color: 'white', marginTop: '10px',fontWeight:'bold',borderRadius:'10px' }}>Get Started</Button>
+                            <Link to={'/driverlogin'} className="d-block my-3">Already have an account? Sign in</Link>
+                        </Grid>
+                        <Grid size={6}>
+                            <CardMedia component={'img'} image="./earner-illustra.webp" sx={{ borderRadius: '20px', maxHeight: '53dvh' }} />
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Container>
+        </>
+    )
 }
 
 export default SectionThree;

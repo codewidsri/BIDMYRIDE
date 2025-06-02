@@ -14,19 +14,19 @@ function SectionTwo() {
             <Box component={'form'} onSubmit={HandleChange}>
                 <Grid container spacing={5} display={'flex'} alignItems={'center'}>
                     <Grid size={6}>
-                        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bolder' }}>Go Anywhere with BidMyRide</Typography>
-                        <InputGroup className="mb-5">
-                            <InputGroup.Text><GpsFixedIcon /></InputGroup.Text>
-                            <Form.Control type="text" placeholder="PickUpLocation" size="lg" />
-                        </InputGroup>
-                        <InputGroup className="mb-3">
-                            <InputGroup.Text><LocationOnIcon /></InputGroup.Text>
-                            <Form.Control type="text" placeholder="DropOffLocation" size="lg" />
-                        </InputGroup>
-                        <Button sx={{ padding: '10px', backgroundColor: 'ButtonText', color: 'wheat', marginTop: '10px',fontWeight:'bold' }} fullWidth><ExploreIcon />&nbsp;Search</Button>
+                        <MapComponent />
                     </Grid>
                     <Grid size={6}>
-                        <MapComponent />
+                        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bolder' }}>Go Anywhere with BidMyRide</Typography>
+                        <InputGroup className="mb-5">
+                            <InputGroup.Text className="border-primary rounded p-2"><GpsFixedIcon /></InputGroup.Text>
+                            <Form.Control type="text" placeholder="PickUpLocation" size="lg" className="border-dark rounded p-2" style={{ borderWidth: '2px' }}/>
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text className="border-primary rounded p-2"><LocationOnIcon /></InputGroup.Text>
+                            <Form.Control type="text" placeholder="DropOffLocation" size="lg" className="border-dark rounded p-2" style={{ borderWidth: '2px' }}/>
+                        </InputGroup>
+                        <Button sx={{ padding: '10px', backgroundColor: 'ButtonText', color: 'wheat', marginTop: '10px', fontWeight: 'bold' }} fullWidth><ExploreIcon />&nbsp;Search</Button>
                     </Grid>
                 </Grid>
             </Box>

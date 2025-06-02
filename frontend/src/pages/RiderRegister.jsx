@@ -1,15 +1,22 @@
-import { Container, Box, Typography, Paper, Button, TextField, Collapse, Alert, IconButton, Grid, FormControlLabel, Checkbox, Link } from "@mui/material";
-import { ToastContainer, ToastBody, Toast } from 'react-bootstrap'
+import { Container, Box, Typography, Paper, Button, TextField, Collapse, Alert, IconButton, Grid, FormControlLabel, Checkbox } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
+import { Toast, ToastContainer } from 'react-bootstrap'
 
 function RiderRegister() {
     const navigate = useNavigate()
+
     const [open, setopen] = useState(false)
-    const [showerror, setshowerror] = useState('')
-    const [type, settype] = useState('')
+    const [error, seterror] = useState('')
+    const [errortype, seterrortype] = useState('')
+
+    const [show, setshow] = useState(false);
+    const [showmessage, setshowmessage] = useState('')
+    const [showmessagetype, setshowmessagetype] = useState('')
+
     const [showpassword, setshowpassword] = useState(false)
     const [form, setform] = useState({
         name: '',
@@ -25,18 +32,18 @@ function RiderRegister() {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
                 setform((prev) => ({ ...prev, longitude: position.coords.longitude, latitude: position.coords.latitude }))
-                setshowerror("location data is retrieved successfully")
+                seterror("location data is retrieved successfully")
                 setopen(true)
-                settype('success')
+                seterrortype('success')
             }, (error) => {
-                setshowerror(error)
+                seterror(error)
                 setopen(true);
-                settype('info')
+                seterrortype('info')
             })
         } else {
-            setshowerror("location is not supported by the browser please use another one")
+            seterror("location is not supported by the browser please use another one")
             setopen(true);
-            settype('error')
+            seterrortype('error')
         }
     }
 
@@ -58,31 +65,46 @@ function RiderRegister() {
             }
         }
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND}/rider/register`, datatosend)
+            const configuration = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND}/rider/register`, datatosend, configuration)
+            setshow(true)
+            setshowmessage(response.data.message)
+            setshowmessagetype('success')
+            setTimeout(() => {
+                navigate('/riderlogin')
+            }, 3000);
         } catch (error) {
-
+            setshow(true)
+            setshowmessage("Error occured!")
+            setshowmessagetype("danger")
         }
     }
 
     return (
         <>
-            <ToastContainer position="top-center" className="p-3">
-                <Toast bg="info" show={show} onClose={() => setshow(!show)} delay={4000} autohide>
+            <ToastContainer position="top-center" className="p-3 m-3">
+                <Toast bg={showmessagetype} show={show} onClose={() => setshow(!show)} delay={5000} autohide className="text-white">
                     <Toast.Header>
                         <strong className="me-auto">Notification</strong>
-                        <small>Just now</small>
+                        <small>just now</small>
                     </Toast.Header>
-                    <ToastBody>{message}</ToastBody>
+                    <Toast.Body className="text-center">
+                        {showmessage}
+                    </Toast.Body>
                 </Toast>
             </ToastContainer>
-            <Container maxWidth='sm' sx={{ p: 3 }}>
+            <Container maxWidth='sm' sx={{ p: 2 }}>
                 <Collapse in={open}>
-                    <Alert severity={type} action={<IconButton onClick={() => setopen(false)}><CloseIcon></CloseIcon></IconButton>}>
-                        {showerror}
+                    <Alert severity={errortype} action={<IconButton onClick={() => setopen(false)}><CloseIcon /></IconButton>}>
+                        {error}
                     </Alert>
                 </Collapse>
                 <Paper elevation={5}>
-                    <Box component='form' onSubmit={HandleSubmit} sx={{ p: 4 }}>
+                    <Box component='form' onSubmit={HandleSubmit} sx={{ p: 3 }}>
                         <Typography variant='h5' gutterBottom align='center' sx={{ fontWeight: "bold" }}>Rider Registration</Typography>
                         <Grid container spacing={1}>
                             <Grid size={6}>
@@ -148,16 +170,14 @@ function RiderRegister() {
                                 />
                             </Grid>
                             <Grid size={12}>
-                                <Button onClick={getLocation} fullWidth variant="outlined">Get My Location</Button>
+                                <Button onClick={getLocation} fullWidth variant="contained">Get My Location</Button>
                                 <FormControlLabel control={<Checkbox onChange={() => setshowpassword(!showpassword)} />} label='show password' />
                             </Grid>
                             <Grid size={12}>
                                 <Button type="submit" variant="contained" color="success" fullWidth>Register</Button>
                             </Grid>
                         </Grid>
-                    </Box>
-                    <Box component={'div'} display={'flex'} flexDirection={'column'} alignItems={'center'} padding={1}>
-                        <Link component={'button'} onClick={() => navigate('/riderlogin')}>Have an Account? Log in</Link>
+                        <Link className="d-block text-center" to={'/riderlogin'}>Have an Account? Log in</Link>
                     </Box>
                 </Paper>
             </Container>

@@ -1,29 +1,16 @@
-import { Container, Nav, Navbar } from "react-bootstrap"
-import { Link } from "react-router-dom"
-import './Header.css'
+import { Container, Navbar,Nav, Button } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom';
 
-function Header(){
-    return(
+function Header() {
+    const navigate= useNavigate();
+    return (
         <>
-            <Navbar className="bg-dark">
+            <Navbar className='p-3 bg-dark'>
                 <Container>
-                    <Navbar.Brand><Link to='/' className="text-decoration-none fw-bold fs-4">BIDMYRIDE</Link></Navbar.Brand>
+                    <Navbar.Brand className='text-white fw-bold'>BidMyRide</Navbar.Brand>
                     <Nav>
-                        <Nav.Item>
-                            <Link to='/' className="text-decoration-none text-white me-3 nav-hover">Home</Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Link to='/aboutus' className="text-decoration-none text-white me-3 nav-hover">About Us</Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Link to='/contactus' className="text-decoration-none text-white me-3 nav-hover">Contact Us</Link>
-                        </Nav.Item>
-                        <Nav.Item className="">
-                            <Link to='/riderlogin' className="text-decoration-none text-white me-3 bg-primary border rounded px-2 py-2">Book a Ride</Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Link to='/driverlogin' className="text-decoration-none text-white me-3 bg-secondary border rounded px-2 py-2">Bid a Ride</Link>
-                        </Nav.Item>
+                        <Button className='rounded-3 mx-2' onClick={()=>navigate('/riderlogin')}>Login</Button>
+                        <Button className='rounded-3 mx-2' onClick={()=>navigate('/riderregister')}>Signup</Button>
                     </Nav>
                 </Container>
             </Navbar>
