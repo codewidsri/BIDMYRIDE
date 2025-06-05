@@ -77,9 +77,12 @@ async function SearchVehicles(req, res, next) {
                 _id: 0
             }
         );
-        res.status(200).json({ drivers: nearbyDrivers });
+        if(!nearbyDrivers){
+            return res.status(401).json({message:"No available drivers"})
+        }
+        return res.status(200).json({ drivers: nearbyDrivers });
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
