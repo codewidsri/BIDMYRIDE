@@ -1,31 +1,46 @@
-import { Container, Box, Card, Typography, CardMedia, CardActions, Button } from '@mui/material'
+import { Container, Box, Typography, Grid, Card, CardMedia, CardActions, Button } from '@mui/material';
 
 function SectionFive() {
-    return (<>
-        <Container sx={{ marginTop: '5%' }}>
-            <Typography variant='h4' gutterBottom sx={{ fontWeight: 'bolder' }}>Our Services</Typography>
-            <Box component='section' sx={{ display: 'flex' }} alignItems='center' display='flex' justifyContent='center'>
-                <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
-                    <CardMedia component='img' image='/bike.webp' />
-                    <CardActions disableSpacing>
-                        <Button size='large' variant='contained' color='warning'>Bike</Button>
-                    </CardActions>
-                </Card>
-                <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
-                    <CardMedia component='img' image='/auto.webp' />
-                    <CardActions disableSpacing>
-                        <Button size='large' variant='contained' color='warning'>Auto</Button>
-                    </CardActions>
-                </Card>
-                <Card sx={{ maxWidth: '25%', padding: '2%', margin: '2%' }}>
-                    <CardMedia component='img' image='/car.webp' />
-                    <CardActions disableSpacing>
-                        <Button size='large' variant='contained' color='warning'>Cab</Button>
-                    </CardActions>
-                </Card>
-            </Box>
-        </Container>
-    </>)
+    const services = [
+        { label: "Bike", image: "/bike.webp" },
+        { label: "Auto", image: "/auto.webp" },
+        { label: "Cab", image: "/car.webp" },
+    ];
+
+    return (
+        <Box component="section" sx={{ py: { xs: 4, md: 8 } }}>
+            <Container>
+                <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+                    Our Services
+                </Typography>
+
+                <Grid container spacing={4} display={'flex'} justifyContent={'center'} alignItems="center">
+                    {services.map((service, index) => (
+                        <Grid item xs={12} sm={6} md={4} key={index}>
+                            <Card sx={{ borderRadius: 3, boxShadow: 3,padding:'8%' }}>
+                                <CardMedia
+                                    component="img"
+                                    image={service.image}
+                                    alt={service.label}
+                                    sx={{ height: 200, objectFit: 'cover' }}
+                                />
+                                <CardActions sx={{ justifyContent: 'center' }}>
+                                    <Button
+                                        size="large"
+                                        variant="contained"
+                                        color="warning"
+                                        sx={{ fontWeight: 'bold', px: 4 }}
+                                    >
+                                        {service.label}
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Container>
+        </Box>
+    );
 }
 
 export default SectionFive;

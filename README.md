@@ -1,3 +1,0 @@
-# BIDMYRIDE
-intentui
-material ui

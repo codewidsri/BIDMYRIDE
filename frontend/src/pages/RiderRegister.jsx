@@ -79,7 +79,7 @@ function RiderRegister() {
             }, 3000);
         } catch (error) {
             setshow(true)
-            setshowmessage("Error occured!")
+            setshowmessage(error.response.data.message)
             setshowmessagetype("danger")
         }
     }

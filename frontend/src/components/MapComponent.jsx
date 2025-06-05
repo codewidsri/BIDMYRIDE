@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { Box } from '@mui/material';
 
 let DefaultIcon = L.icon({
   iconUrl: icon,
@@ -37,16 +38,17 @@ const LocationMarker = ({ position, setPosition }) => {
   );
 }
 
-function MapComponent () {
+function MapComponent() {
   const [position, setPosition] = useState({ lat: 13.0827, lng: 80.2707 }); // Default: Chennai
 
   return (
-    <div>
-      <MapContainer center={position} zoom={30} style={{ height: '350px', width: '100%' }}>
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors"/>
-        <LocationMarker position={position} setPosition={setPosition} />
-      </MapContainer>
-    </div>
+    <Box sx={{width:{ xs: 380, sm: 400, md: 420 ,lg: 450}}}>
+      <div>
+        <MapContainer center={position} zoom={30} style={{ height: '350px', width: '100%' }}>
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
+        </MapContainer>
+      </div>
+    </Box>
   );
 }
 

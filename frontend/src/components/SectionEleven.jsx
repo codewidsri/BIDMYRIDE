@@ -5,16 +5,16 @@ function SectionEleven() {
         <>
             <Container sx={{ marginTop: '5%' }}>
                 <Box component={'section'}>
-                    <Grid container spacing={5}>
-                        <Grid size={6}>
-                            <Typography variant="h4" gutterBottom sx={{ fontWeight: "bolder" }}>Committed to Keeping you safe</Typography>
+                    <Grid container spacing={3} display={'flex'} justifyContent={'center'} alignItems="center">
+                        <Grid item xs={12} md={6}>
+                            <Typography variant="h4" sx={{ fontWeight: "bolder" }}>Committed to Keeping you safe</Typography>
                         </Grid>
-                        <Grid size={6}>
+                        <Grid item xs={12} md={6}>
                             <Typography sx={{fontSize:'18px'}}>We've created our services with safety in mind, down to every last details</Typography>
                         </Grid>
                     </Grid>
-                    <Grid container spacing={5} sx={{marginTop:'5%'}}>
-                        <Grid size={4}>
+                    <Grid container spacing={5} sx={{marginTop:'5%'}} display={'flex'} justifyContent={'center'} alignItems="center">
+                        <Grid item xs={12} md={4} sx={{width:{lg:'30%'}}}>
                             <Card sx={{padding:'5%'}}>
                                 <CardMedia component={'img'} image="./il_square_safety.svg" sx={{width:'25%'}}/>
                                 <CardContent>
@@ -23,7 +23,7 @@ function SectionEleven() {
                                 </CardContent>
                             </Card>
                         </Grid>
-                        <Grid size={4}>
+                        <Grid item xs={12} md={4} sx={{width:{lg:'30%'}}}>
                             <Card sx={{padding:'5%'}}>
                                 <CardMedia component={'img'} image="./il_square_location_sharing.svg" sx={{width:'25%'}}/>
                                 <CardContent>
@@ -32,7 +32,7 @@ function SectionEleven() {
                                 </CardContent>
                             </Card>
                         </Grid>
-                        <Grid size={4}>
+                        <Grid item xs={12} md={4} sx={{width:{lg:'30%'}}}>
                             <Card sx={{padding:'5%'}}>
                                 <CardMedia component={'img'} image="./il_square_chat_alt.svg" sx={{width:'25%'}}/>
                                 <CardContent>

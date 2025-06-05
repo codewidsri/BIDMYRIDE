@@ -1,26 +1,69 @@
-import { Container, Box, Typography, Grid, CardMedia, Button } from "@mui/material";
+import { Container, Box, Typography, Grid, CardMedia, Button, Link as MuiLink } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function SectionThree() {
     return (
-        <>
-            <Container sx={{ marginTop: '5%' }}>
-                <Box component={'section'}>
-                    <Grid container spacing={5} display={'flex'} alignItems={'center'}>
-                        <Grid size={6}>
-                            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bolder' }}>Drive when you want, make what you need</Typography>
-                            <Typography variant="h6" gutterBottom>Make money on your Schedule with deliveries or rides- or both.</Typography>
-                            <Button sx={{ padding: '15px', backgroundColor: 'ButtonText', color: 'white', marginTop: '10px',fontWeight:'bold',borderRadius:'10px' }}>Get Started</Button>
-                            <Link to={'/driverlogin'} className="d-block my-3">Already have an account? Sign in</Link>
-                        </Grid>
-                        <Grid size={6}>
-                            <CardMedia component={'img'} image="./earner-illustra.webp" sx={{ borderRadius: '20px', maxHeight: '53dvh' }} />
-                        </Grid>
+        <Box component="section" sx={{ py: { xs: 4, md: 8 } }}>
+            <Container>
+                <Grid container spacing={4} display={'flex'} justifyContent={'center'} alignItems="center">
+                    {/* Text Section */}
+                    <Grid item xs={12} md={6}>
+                        <Box sx={{ maxWidth: 650 }}>
+                            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
+                                Drive when you want, make what you need
+                            </Typography>
+                            <Typography variant="h6" gutterBottom>
+                                Make money on your schedule with deliveries or rides — or both.
+                            </Typography>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    mt: 2,
+                                    px: 4,
+                                    py: 1.5,
+                                    fontWeight: 'bold',
+                                    borderRadius: '10px',
+                                    backgroundColor: '#000',
+                                    color: '#fff',
+                                    '&:hover': {
+                                        backgroundColor: '#333',
+                                    },
+                                }}
+                            >
+                                Get Started
+                            </Button>
+
+                            <MuiLink
+                                component={Link}
+                                to="/driverlogin"
+                                underline="hover"
+                                sx={{ display: 'block', mt: 2, fontWeight: 500 }}
+                            >
+                                Already have an account? Sign in
+                            </MuiLink>
+                        </Box>
                     </Grid>
-                </Box>
+
+                    {/* Image Section */}
+                    <Grid item xs={12} md={6}>
+                        <Box sx={{ width: '100%', height: { xs: 300, sm: 400, md: 450 } }}>
+                            <CardMedia
+                                component="img"
+                                image="./earner-illustra.webp"
+                                alt="Driver Illustration"
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    borderRadius: '20px',
+                                }}
+                            />
+                        </Box>
+                    </Grid>
+                </Grid>
             </Container>
-        </>
-    )
+        </Box>
+    );
 }
 
 export default SectionThree;

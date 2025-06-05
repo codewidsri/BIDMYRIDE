@@ -80,11 +80,11 @@ function DriverRegister() {
             setshowmessage(response.data.message)
             setshowmessagetype('success')
             setTimeout(() => {
-                navigate('/riderlogin')
+                navigate('/driverlogin')
             }, 3000);
         } catch (error) {
             setshow(true)
-            setshowmessage("Error occured!")
+            setshowmessage(error.response.data.message)
             setshowmessagetype("danger")
         }
     }
@@ -164,9 +164,9 @@ function DriverRegister() {
                                 <FormControl required fullWidth margin="normal">
                                     <InputLabel margin="normal">Vehicle Type</InputLabel>
                                     <Select onChange={HandleChange} value={form.vehicletype} name="vehicletype" margin="normal">
-                                        <MenuItem value={0}>Bike</MenuItem>
-                                        <MenuItem value={1}>Auto</MenuItem>
-                                        <MenuItem value={2}>Car</MenuItem>
+                                        <MenuItem value={'bike'}>Bike</MenuItem>
+                                        <MenuItem value={'auto'}>Auto</MenuItem>
+                                        <MenuItem value={'car'}>Car</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -193,7 +193,7 @@ function DriverRegister() {
                                     value={form.address}
                                     onChange={HandleChange}
                                     multiline
-                                    rows={4}
+                                    rows={3}
                                 />
                             </Grid>
                             <Grid size={6}>
