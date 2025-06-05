@@ -1,7 +1,0 @@
-{
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {},
-  "appPort": [3000,5173],
-  "forwardPorts": [3000,5173], 
-  "postStartCommand": "gh codespace ports public 3000 && gh codespace ports public 5173" 
-}
