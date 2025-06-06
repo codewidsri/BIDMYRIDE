@@ -26,8 +26,6 @@ function MapUpdate({notify}) {
             <Container>
                 <Box sx={{ padding: 2, margin: 1 }}>
                     <Grid container spacing={5}>
-                        <Grid size={{ xs: 12, md: 3 }}><b>{user.name}</b></Grid>
-                        <Grid size={{ xs: 12, md: 3 }}><b>{user.email}</b></Grid>
                         <Grid size={{ xs: 12, md: 3 }}>
                             <Typography
                                 sx={{
