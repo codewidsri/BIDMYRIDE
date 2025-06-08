@@ -1,9 +1,9 @@
-import { Box, Container, FormControl, RadioGroup, FormControlLabel, Radio, FormHelperText, Card, CardContent, Grid } from "@mui/material";
+import { Box, Container, FormControl, RadioGroup, FormControlLabel, Radio, FormHelperText, Grid } from "@mui/material";
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import ElectricRickshawIcon from '@mui/icons-material/ElectricRickshaw';
 
-function ShowDriversAndVehicles({ vehicle, setVehicle, error, setError }) {
+function SelectVehicles({ vehicle, setVehicle, error, setError }) {
 
   const handleChange = (event) => {
     setVehicle(event.target.value);
@@ -12,12 +12,10 @@ function ShowDriversAndVehicles({ vehicle, setVehicle, error, setError }) {
 
   return (
     <Container>
-      <Card>
-        <CardContent>
           <FormControl component="fieldset" error={error} fullWidth>
             <RadioGroup value={vehicle} onChange={handleChange}>
               <Grid container spacing={2} mt={1} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                <Grid item xs={12} sm={4}>
+                <Grid size={4}>
                   <Box display="flex" alignItems="center">
                     <FormControlLabel
                       value="bike"
@@ -31,7 +29,7 @@ function ShowDriversAndVehicles({ vehicle, setVehicle, error, setError }) {
                     />
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid size={4}>
                   <Box display="flex" alignItems="center">
                     <FormControlLabel
                       value="auto"
@@ -45,7 +43,7 @@ function ShowDriversAndVehicles({ vehicle, setVehicle, error, setError }) {
                     />
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid size={4}>
                   <Box display="flex" alignItems="center">
                     <FormControlLabel
                       value="car"
@@ -65,10 +63,8 @@ function ShowDriversAndVehicles({ vehicle, setVehicle, error, setError }) {
               <FormHelperText>Please select a vehicle before submitting.</FormHelperText>
             )}
           </FormControl>
-        </CardContent>
-      </Card>
     </Container>
   );
 }
 
-export default ShowDriversAndVehicles;
+export default SelectVehicles;

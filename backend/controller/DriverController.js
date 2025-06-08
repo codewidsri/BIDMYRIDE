@@ -35,11 +35,40 @@ async function Login(req, res, next) {
         const token = jwt.sign({ _id: existingdriver._id, email: existingdriver.email, name: existingdriver.name }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' })
         res.cookie('driver_token', token, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 })
         const driverinfo = {
-            _id: existingdriver._id, name: existingdriver.name, email: existingdriver.email
+            _id: existingdriver._id, name: existingdriver.name, email: existingdriver.email, isavailable: false
         }
         return res.status(200).json({ message: 'Login successfull', driver: driverinfo })
     } catch (error) {
         return res.status(500).json({ message: "Something went wrong" });
+    }
+}
+
+async function UpdateLocation(req, res, next) {
+    try {
+        const { lat, lng } = req.body
+        const _id = req.driver._id;
+        const driver = await Drivers.findById(_id);
+
+        if (!driver) {
+            return res.status(401).json({ message: 'driver not found' })
+        }
+
+        const updateddriver = await Drivers.findByIdAndUpdate(
+            _id,
+            {
+                $set: {
+                    location: {
+                        type: 'Point',
+                        coordinates: [lng, lat]
+                    }
+                }
+            },
+            { new: true }
+        )
+
+        return res.status(200).json({ message: "live location was updated" })
+    } catch (error) {
+        return res.status(500).json({ message: "Server error" });
     }
 }
 
@@ -66,8 +95,10 @@ async function ChangeAvailabilty(req, res, next) {
     }
 }
 
-function Logout(req, res) {
+async function Logout(req, res) {
     try {
+        const { _id } = req.body;
+        await Drivers.findByIdAndUpdate(_id, { $set: { isavailable: false } }, { new: true })
         res.clearCookie('driver_token', {
             httpOnly: true,
             secure: true,
@@ -79,4 +110,4 @@ function Logout(req, res) {
     }
 }
 
-export { Register, Login, ChangeAvailabilty, Logout }
+export { Register, Login, UpdateLocation, ChangeAvailabilty, Logout }

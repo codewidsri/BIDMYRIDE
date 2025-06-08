@@ -1,26 +1,30 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContextProvider";
 import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import axios from "axios";
+import { useState,useEffect } from "react";
 
-function MapUpdate({notify}) {
-    const { user } = useContext(AuthContext)
+function MapUpdate({ notify }) {
     const [available, setavailable] = useState(false)
+
     async function HandleAvailablity() {
         try {
             const configuration = {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
             }
-            const response = await axios.get(`${import.meta.env.VITE_BACKEND}/driver/changeavailability`,configuration)
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND}/driver/changeavailability`, configuration)
             setavailable(response.data.isavailable)
-            notify(response.data.message,'success')
+            notify(response.data.message, 'success')
         } catch (error) {
-            notify(error.response.data.message,'danger')
+            notify(error.response.data.message, 'danger')
         }
     }
+
+     useEffect(()=>{
+        HandleAvailablity();
+    },[])
+
     return (
         <>
             <Container>

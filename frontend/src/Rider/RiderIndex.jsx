@@ -1,25 +1,39 @@
 import Map from "./Map.jsx";
 import RiderMapForm from "./RiderMapForm.jsx";
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap'
+import ShowDrivers from "./ShowDrivers.jsx";
+import { AuthContext } from "../context/AuthContextProvider.jsx";
+import Socket from "../context/Socket.js";
 
 function RiderIndex() {
+    const { user } = useContext(AuthContext)
+
     const [pickup, setPickup] = useState('');
     const [dropoff, setDropoff] = useState('');
     const [pickupCoords, setPickupCoords] = useState(null);
     const [dropoffCoords, setDropoffCoords] = useState(null);
+    
+    const [distance, setDistance] = useState(null);
 
     const [show, setshow] = useState(false);
     const [showmessage, setshowmessage] = useState('')
     const [showmessagetype, setshowmessagetype] = useState('')
-
-    const [showvehicles, setshowvehicles] = useState(null);
-
+    
+    const [showdrivers, setshowdrivers] = useState(null);
+    
     function notify(message, type) {
         setshowmessage(message);
         setshowmessagetype(type);
         setshow(true);
     }
+
+    useEffect(() => {
+        const riderid = user._id;
+        const ridername = user.name;
+        const rideremail = user.email;
+        Socket.emit('rider:join', { riderid,ridername,rideremail })
+    }, [])
 
     return (
         <>
@@ -45,11 +59,14 @@ function RiderIndex() {
                 setPickupCoords={setPickupCoords}
                 dropoffCoords={dropoffCoords}
                 setDropoffCoords={setDropoffCoords}
-                setshowvehicles={setshowvehicles}
+                distance={distance}
+                setshowdrivers={setshowdrivers}
                 notify={notify}
             />
 
-            <Map pickupCoords={pickupCoords} dropoffCoords={dropoffCoords} setPickupCoords={setPickupCoords} notify={notify} showvehicles={showvehicles} />
+            <Map pickupCoords={pickupCoords} dropoffCoords={dropoffCoords} setDistance={setDistance} notify={notify} showdrivers={showdrivers} />
+
+            <ShowDrivers showdrivers={showdrivers} />
 
         </>
     )

@@ -1,17 +1,23 @@
-import jwt from 'jsonwebtoken'
+import jwt, { decode } from 'jsonwebtoken'
+import Drivers from '../models/Driver.js';
 
-function VerifyDriver(req,res,next) {
+async function VerifyDriver(req, res, next) {
     const token = req.cookies.driver_token;
-    if(!token){
-        return res.status(401).json({message:'Driver not found'})
+    if (!token) {
+        return res.status(401).json({ message: 'Driver not found' })
     }
 
     try {
-        const decoded = jwt.verify(token,process.env.JWT_SECRET_KEY);
-        req.driver={
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        const checkdriver = await Drivers.findById(decoded._id);
+        if (!checkdriver) {
+            return res.status(401).json({ message: 'Driver not found' })
+        }
+        req.driver = {
             _id: decoded._id,
             email: decoded.email,
-            name: decoded.name
+            name: decoded.name,
+            isavailable : checkdriver.isavailable
         }
         next();
     } catch (error) {

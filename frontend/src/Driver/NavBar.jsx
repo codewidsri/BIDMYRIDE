@@ -6,11 +6,10 @@ import { AuthContext } from '../context/AuthContextProvider';
 import axios from 'axios';
 
 function Navbar() {
-    const { dispatch } = useContext(AuthContext)
+    const {user, dispatch } = useContext(AuthContext)
     async function Logout(){
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND}/driver/logout`,null,{ withCredentials: true })
-            console.log(response.data.message)
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND}/driver/logout`,user,{ withCredentials: true })
             dispatch({type:'logout'})
         } catch (error) {
             console.log(error.response.data.message)

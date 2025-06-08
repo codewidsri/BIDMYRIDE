@@ -19,7 +19,7 @@ const driverIcon = L.icon({
   popupAnchor: [0, -40], // point from which the popup should open relative to the iconAnchor
 });
 
-const LocationMarker = ({ position, setPosition, notify, pickupCoords, dropoffCoords, showvehicles }) => {
+const LocationMarker = ({ position, setPosition, notify, pickupCoords, dropoffCoords, showdrivers }) => {
   const markerRef = useRef(null);
 
   useMapEvents({
@@ -41,7 +41,7 @@ const LocationMarker = ({ position, setPosition, notify, pickupCoords, dropoffCo
 
   return (
     <>
-      {showvehicles && showvehicles.map((driver, index) => (
+      {showdrivers && showdrivers.map((driver, index) => (
         <Marker
           key={index}
           position={[
@@ -117,18 +117,16 @@ async function getOSRMRoute(lat1, lon1, lat2, lon2) {
   }
 }
 
-function Map({ pickupCoords, dropoffCoords, setPickupCoords, notify, showvehicles }) {
+function Map({ pickupCoords, dropoffCoords,setDistance, notify, showdrivers }) {
 
   const [position, setPosition] = useState({ lat: 13.0827, lng: 80.2707 });
 
-  const [distance, setDistance] = useState(null);
   const [routePoints, setRoutePoints] = useState([]);
 
   function getLocation() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
-        setPickupCoords({ lat: position.coords.latitude, lng: position.coords.longitude })
         notify("Location data is retrieved successfully", "success");
       }, (error) => {
         notify("Failed to retrieve location", "info");
@@ -181,19 +179,6 @@ function Map({ pickupCoords, dropoffCoords, setPickupCoords, notify, showvehicle
   return (
     <div style={{ width: '100%', height: '70dvh' }}>
 
-      {distance !== null && (
-        <div
-          style={{
-            textAlign: 'center',
-            fontWeight: 'bold',
-            fontSize: '1.2rem',
-            marginBottom: '8px',
-          }}
-        >
-          Distance: {distance.toFixed(2)} km
-        </div>
-      )}
-
       <MapContainer center={position} zoom={10} style={{ width: '100%', height: '100%' }}>
 
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
@@ -206,7 +191,7 @@ function Map({ pickupCoords, dropoffCoords, setPickupCoords, notify, showvehicle
           notify={notify}
           pickupCoords={pickupCoords}
           dropoffCoords={dropoffCoords}
-          showvehicles={showvehicles}
+          showdrivers={showdrivers}
         />
 
         {routePoints.length > 0 && (

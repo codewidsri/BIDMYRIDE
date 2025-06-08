@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 're
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import axios from 'axios';
 
 const DefaultIcon = L.icon({
     iconUrl: icon,
@@ -44,9 +45,10 @@ const LocationMarker = ({ position, setPosition, notify }) => {
             </Marker>
         </>
     );
-};
+}
 
-function Map({ notify}) {
+function Map({ notify }) {
+
     const [position, setPosition] = useState({ lat: 13.0827, lng: 80.2707 });
 
     function getLocation() {
@@ -62,9 +64,26 @@ function Map({ notify}) {
         }
     }
 
+    async function UpdateLocation() {
+        try {
+            const configuration = {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
+            }
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND}/driver/updatelocation`, position, configuration)
+            notify(response.data.message,'success')
+        } catch (error) {
+            notify(error.response.data.message,'danger')
+        }
+    }
+
     useEffect(() => {
         getLocation();
     }, [])
+
+    useEffect(()=>{
+        UpdateLocation();
+    },[position])
 
     function MapViewUpdater({ position }) {
         const map = useMap();

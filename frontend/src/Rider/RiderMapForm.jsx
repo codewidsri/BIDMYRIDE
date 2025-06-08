@@ -1,16 +1,19 @@
 import { Container, Grid, Box, TextField, Button, InputAdornment, List, ListItem, Typography, Paper } from "@mui/material";
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import ExploreIcon from '@mui/icons-material/Explore';
-import { useState } from 'react';
-import ShowDriversAndVehicles from "./ShowDriversAndVehicles.jsx";
+import SendIcon from '@mui/icons-material/Send';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import StraightenIcon from '@mui/icons-material/Straighten';
+import { useEffect, useState } from 'react';
 import axios from "axios";
+import SelectVehicles from "./SelectVehicles.jsx";
 
-function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, setPickupCoords, dropoffCoords, setDropoffCoords,setshowvehicles, notify }) {
+function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, setPickupCoords, dropoffCoords, setDropoffCoords, distance, setshowdrivers, notify }) {
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [dropoffSuggestions, setDropoffSuggestions] = useState([]);
-    const [vehicle, setVehicle] = useState('');
+    const [vehicle, setVehicle] = useState(null);
     const [error, setError] = useState(false);
+    const [fare, setfare] = useState('')
 
     const handleAddressChange = async (type, value) => {
         if (type === 'pickup')
@@ -40,15 +43,18 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
             setPickup(place.display_name);
             setPickupCoords({ lat: place.lat, lng: place.lon });
             setPickupSuggestions([]);
+            localStorage.setItem('pickupplace', place.display_name)
+            localStorage.setItem('pickupcoords', JSON.stringify({ lat: place.lat, lng: place.lon }))
         } else {
             setDropoff(place.display_name);
             setDropoffCoords({ lat: place.lat, lng: place.lon });
             setDropoffSuggestions([]);
+            localStorage.setItem('dropoffplace', place.display_name)
+            localStorage.setItem('dropoffcoords', JSON.stringify({ lat: place.lat, lng: place.lon }))
         }
     };
 
-    async function HandleSubmit(e) {
-        e.preventDefault()
+    async function HandleSubmit() {
         try {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND}/rider/searchvehicles`, {
                 params: {
@@ -56,19 +62,42 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                     vehicle
                 }
             })
-            setshowvehicles(response.data.drivers)
-            notify("vehicles retrieved","success")
+            setshowdrivers(response.data.drivers)
+            notify("vehicles retrieved", "success")
         } catch (error) {
-            notify(error.response.data.message,'danger');
+            notify(error.response.data.message, 'danger');
         }
-    };
+    }
+
+    function getPickupDropoff() {
+        const pickupplace = localStorage.getItem('pickupplace') || null;
+        const dropoffplace = localStorage.getItem('dropoffplace') || null;
+        const pickupcoord = localStorage.getItem('pickupcoords') || null;
+        const dropoffcoord = localStorage.getItem('dropoffcoords') || null;
+        if (pickupcoord && dropoffcoord) {
+            setPickup(pickupplace)
+            setDropoff(dropoffplace)
+            setPickupCoords(JSON.parse(pickupcoord))
+            setDropoffCoords(JSON.parse(dropoffcoord))
+        }
+    }
+
+    useEffect(() => {
+        getPickupDropoff();
+    }, [])
+
+    useEffect(() => {
+        if (pickup && dropoff && vehicle && pickupCoords && dropoffCoords) {
+            HandleSubmit();
+        }
+    }, [pickup, dropoff, vehicle, pickupCoords, dropoffCoords]);
 
     return (
         <Container sx={{ padding: '1%' }} maxWidth='lg'>
 
-            <Box component={'form'} onSubmit={HandleSubmit}>
+            <Box component={'form'}>
 
-                <Grid container spacing={3} alignItems="flex-start" justifyContent="center">
+                <Grid container spacing={3} alignItems="center" justifyContent="center">
 
                     <Grid size={{ xs: 12, sm: 4 }}>
                         <TextField
@@ -136,13 +165,60 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                         )}
                     </Grid>
 
-                    <Grid size={{ xs: 12, sm: 4 }}>
+                    <Grid size={{ xs: 12, sm: 4 }} >
+                        <SelectVehicles
+                            vehicle={vehicle}
+                            setVehicle={setVehicle}
+                            error={error}
+                            setError={setError}
+                        />
+                    </Grid>
+
+                </Grid>
+
+            </Box>
+
+            <Box>
+                <Grid container spacing={3} alignItems="center" justifyContent="center">
+                    <Grid size={{xs:4}}>
+                        <TextField 
+                            fullWidth
+                            variant="outlined"
+                            label="Distance in KM"
+                            value={distance}
+                            InputProps={{
+                                readOnly: true,
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <StraightenIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 4 }}>
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            label="Recommended-Fare"
+                            margin="normal"
+                            value={fare}
+                            onChange={(e) => setfare(e.target.value)}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <CurrencyRupeeIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 4 }}>
                         <Button
                             type="submit"
                             variant="contained"
                             fullWidth
                             sx={{
-                                mt: 3,
                                 py: 1.5,
                                 fontWeight: 'bold',
                                 borderRadius: '10px',
@@ -153,21 +229,12 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                                 },
                             }}
                         >
-                            <ExploreIcon sx={{ mr: 1 }} />
-                            Search
+                            <SendIcon sx={{ mr: 1 }} />
+                            Send
                         </Button>
                     </Grid>
-
                 </Grid>
-
             </Box>
-
-            <ShowDriversAndVehicles
-                vehicle={vehicle}
-                setVehicle={setVehicle}
-                error={error}
-                setError={setError}
-            />
 
         </Container>
     );

@@ -52,7 +52,7 @@ async function SearchVehicles(req, res, next) {
         };
 
         if (!pickupCoords.lat || !pickupCoords.lng || !vehicle) {
-            return res.status(400).json({ message: "Missing required parameters" });
+            return res.status(400).json({ message: "Please fill required fields" });
         }
 
         const nearbyDrivers = await Drivers.find({
