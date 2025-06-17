@@ -14,7 +14,7 @@ const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
-        origin: 'https://effective-orbit-wr75rj799gxpf5vwr-5173.app.github.dev',
+        origin: 'https://shiny-meme-jj57jw5449w9c95g-5173.app.github.dev',
         credentials: true
     }
 })
@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
         showdrivers.forEach((driver) => {
             const driversocket = onlinedrivers[driver._id]
             if (driversocket) {
-                io.to(driverSocket).emit('driver:receivefare', { riderid, ridername, fare, pickup, dropoff, distance, pickupCoords })
+                io.to(driversocket).emit('driver:receivefare', { riderid, ridername, fare, pickup, dropoff, distance, pickupCoords })
             }
         })
     })
@@ -51,8 +51,8 @@ io.on('connection', (socket) => {
     })
 
 })
-
-app.use(cors({ origin: 'https://effective-orbit-wr75rj799gxpf5vwr-5173.app.github.dev', credentials: true }))
+// https://shiny-meme-jj57jw5449w9c95g-5173.app.github.dev/
+app.use(cors({ origin: 'https://shiny-meme-jj57jw5449w9c95g-5173.app.github.dev', credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
 

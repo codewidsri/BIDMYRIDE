@@ -1,8 +1,9 @@
 import Map from "./Map.jsx";
 import MapUpdate from "./MapUpdate.jsx";
 import { Toast, ToastContainer } from 'react-bootstrap'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ShowRiders from './ShowRiders.jsx';
+import Socket from '../context/Socket.js';
 
 function DriverIndex() {
 
@@ -10,11 +11,19 @@ function DriverIndex() {
     const [showmessage, setshowmessage] = useState('')
     const [showmessagetype, setshowmessagetype] = useState('')
 
+    const [incommingfare, setincommingfare] = useState('');
+
     function notify(message, type) {
         setshow(true);
         setshowmessage(message);
         setshowmessagetype(type);
     }
+
+    useEffect(() => {
+        Socket.on('driver:receivefare', ({ riderid, ridername, fare, pickup, dropoff, distance, pickupCoords }) => {
+            setincommingfare((prev) => [...prev, { riderid, ridername, fare, pickup, dropoff, distance, pickupCoords }])
+        })
+    }, [])
 
     return (
         <>
@@ -30,11 +39,11 @@ function DriverIndex() {
                 </Toast>
             </ToastContainer>
 
-            <MapUpdate notify={notify}  />
+            <MapUpdate notify={notify} />
 
-            <Map notify={notify} />
+            <Map notify={notify} incommingfare={incommingfare} />
 
-            <ShowRiders />
+            <ShowRiders incommingfare={incommingfare} />
         </>
     )
 }

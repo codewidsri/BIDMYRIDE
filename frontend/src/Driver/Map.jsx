@@ -13,7 +13,15 @@ const DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const LocationMarker = ({ position, setPosition, notify }) => {
+const ridericon = L.icon({
+    iconUrl: '/rider-icon.svg', // or import and use it if in `src`
+    iconSize: [32, 40],    // width, height
+    iconAnchor: [16, 40],  // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -40], // point from which the popup should open relative to the iconAnchor
+});
+
+
+const LocationMarker = ({ position, setPosition, notify, incommingfare }) => {
     const markerRef = useRef(null);
 
     useMapEvents({
@@ -43,11 +51,25 @@ const LocationMarker = ({ position, setPosition, notify }) => {
             >
                 <Popup>Drag me to your location</Popup>
             </Marker>
+            {incommingfare && incommingfare.map((driver, index) => (
+                <Marker
+                    key={index}
+                    position={[
+                        driver.pickupCoords.lat, // lat
+                        driver.pickupCoords.lng  // lng
+                    ]}
+                    icon={ridericon}
+                >
+                    <Popup>
+                        hi
+                    </Popup>
+                </Marker>
+            ))}
         </>
     );
 }
 
-function Map({ notify }) {
+function Map({ notify, incommingfare }) {
 
     const [position, setPosition] = useState({ lat: 13.0827, lng: 80.2707 });
 
@@ -71,9 +93,9 @@ function Map({ notify }) {
                 withCredentials: true
             }
             const response = await axios.post(`${import.meta.env.VITE_BACKEND}/driver/updatelocation`, position, configuration)
-            notify(response.data.message,'success')
+            notify(response.data.message, 'success')
         } catch (error) {
-            notify(error.response.data.message,'danger')
+            notify(error.response.data.message, 'danger')
         }
     }
 
@@ -81,9 +103,9 @@ function Map({ notify }) {
         getLocation();
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         UpdateLocation();
-    },[position])
+    }, [position])
 
     function MapViewUpdater({ position }) {
         const map = useMap();
@@ -108,6 +130,7 @@ function Map({ notify }) {
                     position={position}
                     setPosition={setPosition}
                     notify={notify}
+                    incommingfare={incommingfare}
                 />
 
             </MapContainer>
