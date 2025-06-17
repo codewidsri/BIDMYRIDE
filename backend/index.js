@@ -23,16 +23,21 @@ let onlineriders = {}, onlinedrivers = {};
 
 io.on('connection', (socket) => {
 
-    socket.on('rider:join', ({ riderid, ridername, rideremail }) => {
+    socket.on('rider:join', ({ riderid }) => {
         onlineriders[riderid] = socket.id;
-        console.log(ridername + " rider was joined")
-        console.log(onlineriders)
     })
 
-    socket.on('driver:join', ({ driverid, drivername, driveremail }) => {
+    socket.on('driver:join', ({ driverid }) => {
         onlinedrivers[driverid] = socket.id;
-        console.log(drivername + " driver was joined")
-        console.log(onlinedrivers)
+    })
+
+    socket.on('rider:sendfare', ({ riderid, ridername, fare, showdrivers, pickup, dropoff, distance, pickupCoords }) => {
+        showdrivers.forEach((driver) => {
+            const driversocket = onlinedrivers[driver._id]
+            if (driversocket) {
+                io.to(driverSocket).emit('driver:receivefare', { riderid, ridername, fare, pickup, dropoff, distance, pickupCoords })
+            }
+        })
     })
 
     socket.on('disconnect', () => {

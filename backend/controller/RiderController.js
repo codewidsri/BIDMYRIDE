@@ -74,7 +74,7 @@ async function SearchVehicles(req, res, next) {
                 vehiclenumber: 1,
                 capacity: 1,
                 "location.coordinates": 1,
-                _id: 0
+                _id: 1
             }
         );
         if(!nearbyDrivers){

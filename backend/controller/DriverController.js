@@ -48,11 +48,9 @@ async function UpdateLocation(req, res, next) {
         const { lat, lng } = req.body
         const _id = req.driver._id;
         const driver = await Drivers.findById(_id);
-
         if (!driver) {
             return res.status(401).json({ message: 'driver not found' })
         }
-
         const updateddriver = await Drivers.findByIdAndUpdate(
             _id,
             {
@@ -65,7 +63,6 @@ async function UpdateLocation(req, res, next) {
             },
             { new: true }
         )
-
         return res.status(200).json({ message: "live location was updated" })
     } catch (error) {
         return res.status(500).json({ message: "Server error" });
@@ -79,19 +76,28 @@ async function ChangeAvailabilty(req, res, next) {
         if (!driver) {
             return res.status(401).json({ message: 'driver not found' })
         }
-
         const updateddriver = await Drivers.findByIdAndUpdate(
             _id,
             { $set: { isavailable: !driver.isavailable } },
             { new: true }
         );
-
-        return res.status(200).json({
-            message: "Availability updated successfully",
-            isavailable: updateddriver.isavailable,
-        });
+        return res.status(200).json({ message: "Availability updated successfully", isavailable: updateddriver.isavailable, });
     } catch (error) {
         return res.status(500).json({ message: "Server error" });
+    }
+}
+
+async function RetrieveAvailability(req, res, next) {
+    try {
+        const _id = req.driver._id;
+        const driver = await Drivers.findById(_id);
+        if (!driver) {
+            return res.status(401).json({ message: 'driver not found' })
+        }
+        const driveravailability = await Drivers.findById(_id, { _id: 0, isavailable: 1 });
+        return res.status(200).json({ message: "Availability Retrieved", isavailable: driveravailability.isavailable })
+    } catch (error) {
+        return res.status(500).json({ message: "server error" })
     }
 }
 
@@ -110,4 +116,4 @@ async function Logout(req, res) {
     }
 }
 
-export { Register, Login, UpdateLocation, ChangeAvailabilty, Logout }
+export { Register, Login, UpdateLocation, ChangeAvailabilty, RetrieveAvailability, Logout }

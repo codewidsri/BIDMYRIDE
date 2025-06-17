@@ -21,21 +21,35 @@ function MapUpdate({ notify }) {
         }
     }
 
+    async function RetrieveAvailability() {
+        try {
+            const configuration = {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
+            }
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND}/driver/retrieveavailability`,configuration)
+            setavailable(response.data.isavailable)
+            // notify(response.data.message, 'success')
+        } catch (error) {
+            notify(error.response.data.message, 'danger')
+        }
+    }
+
      useEffect(()=>{
-        HandleAvailablity();
+        RetrieveAvailability();
     },[])
 
     return (
         <>
             <Container>
                 <Box sx={{ padding: 2, margin: 1 }}>
-                    <Grid container spacing={5}>
+                    <Grid container spacing={2}>
                         <Grid size={{ xs: 12, md: 3 }}>
                             <Typography
                                 sx={{
                                     backgroundColor: available ? '#5D8736' : '#F93827',
                                     textAlign: 'center',
-                                    padding: '5px',
+                                    padding: '2px',
                                     borderRadius: 12,
                                     color: 'white'
                                 }}

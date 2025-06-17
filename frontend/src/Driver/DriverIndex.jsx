@@ -1,12 +1,10 @@
-import Map from "./Map";
-import MapUpdate from "./MapUpdate";
+import Map from "./Map.jsx";
+import MapUpdate from "./MapUpdate.jsx";
 import { Toast, ToastContainer } from 'react-bootstrap'
-import { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../context/AuthContextProvider";
-import Socket from "../context/Socket.js";
+import { useState } from "react";
+import ShowRiders from './ShowRiders.jsx';
 
 function DriverIndex() {
-    const { user } = useContext(AuthContext)
 
     const [show, setshow] = useState(false);
     const [showmessage, setshowmessage] = useState('')
@@ -17,13 +15,6 @@ function DriverIndex() {
         setshowmessage(message);
         setshowmessagetype(type);
     }
-
-    useEffect(() => {
-        const driverid = user._id;
-        const drivername = user.name;
-        const driveremail = user.email;
-        Socket.emit("driver:join", { driverid, drivername, driveremail })
-    }, [])
 
     return (
         <>
@@ -42,6 +33,8 @@ function DriverIndex() {
             <MapUpdate notify={notify}  />
 
             <Map notify={notify} />
+
+            <ShowRiders />
         </>
     )
 }

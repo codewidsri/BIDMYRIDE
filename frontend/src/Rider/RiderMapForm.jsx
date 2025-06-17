@@ -4,11 +4,15 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SendIcon from '@mui/icons-material/Send';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import StraightenIcon from '@mui/icons-material/Straighten';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import axios from "axios";
 import SelectVehicles from "./SelectVehicles.jsx";
+import Socket from "../context/Socket.js";
+import { AuthContext } from "../context/AuthContextProvider.jsx";
 
-function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, setPickupCoords, dropoffCoords, setDropoffCoords, distance, setshowdrivers, notify }) {
+function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, setPickupCoords, dropoffCoords, setDropoffCoords, distance, showdrivers, setshowdrivers, notify }) {
+    const { user } = useContext(AuthContext);
+
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [dropoffSuggestions, setDropoffSuggestions] = useState([]);
     const [vehicle, setVehicle] = useState(null);
@@ -92,6 +96,12 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
         }
     }, [pickup, dropoff, vehicle, pickupCoords, dropoffCoords]);
 
+    function SendFare() {
+        const riderid = user._id;
+        const ridername = user.name;
+        Socket.emit('rider:sendfare', {riderid, ridername, fare, showdrivers, pickup, dropoff, distance , pickupCoords })
+    }
+
     return (
         <Container sx={{ padding: '1%' }} maxWidth='lg'>
 
@@ -117,7 +127,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                         />
                         {pickupSuggestions.length > 0 && (
                             <Paper elevation={3}>
-                                <List dense>
+                                <List dense>showdrivers
                                     {pickupSuggestions.map((s, i) => (
                                         <ListItem
                                             key={i}
@@ -180,8 +190,8 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
 
             <Box>
                 <Grid container spacing={3} alignItems="center" justifyContent="center">
-                    <Grid size={{xs:4}}>
-                        <TextField 
+                    <Grid size={{ xs: 4 }}>
+                        <TextField
                             fullWidth
                             variant="outlined"
                             label="Distance in KM"
@@ -228,6 +238,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                                     backgroundColor: '#333',
                                 },
                             }}
+                            onClick={SendFare}
                         >
                             <SendIcon sx={{ mr: 1 }} />
                             Send

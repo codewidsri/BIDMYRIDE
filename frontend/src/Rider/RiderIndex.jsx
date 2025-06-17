@@ -3,11 +3,8 @@ import RiderMapForm from "./RiderMapForm.jsx";
 import { useContext, useEffect, useState } from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap'
 import ShowDrivers from "./ShowDrivers.jsx";
-import { AuthContext } from "../context/AuthContextProvider.jsx";
-import Socket from "../context/Socket.js";
 
 function RiderIndex() {
-    const { user } = useContext(AuthContext)
 
     const [pickup, setPickup] = useState('');
     const [dropoff, setDropoff] = useState('');
@@ -27,13 +24,6 @@ function RiderIndex() {
         setshowmessagetype(type);
         setshow(true);
     }
-
-    useEffect(() => {
-        const riderid = user._id;
-        const ridername = user.name;
-        const rideremail = user.email;
-        Socket.emit('rider:join', { riderid,ridername,rideremail })
-    }, [])
 
     return (
         <>
@@ -60,6 +50,7 @@ function RiderIndex() {
                 dropoffCoords={dropoffCoords}
                 setDropoffCoords={setDropoffCoords}
                 distance={distance}
+                showdrivers={showdrivers}
                 setshowdrivers={setshowdrivers}
                 notify={notify}
             />

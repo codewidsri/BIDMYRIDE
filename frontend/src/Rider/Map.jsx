@@ -177,7 +177,7 @@ function Map({ pickupCoords, dropoffCoords,setDistance, notify, showdrivers }) {
   };
 
   return (
-    <div style={{ width: '100%', height: '70dvh' }}>
+    <div style={{ width: '100%', height: '100dvh' }}>
 
       <MapContainer center={position} zoom={10} style={{ width: '100%', height: '100%' }}>
 
