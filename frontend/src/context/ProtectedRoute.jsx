@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "./AuthContextProvider";
 import { Navigate } from "react-router-dom";
+import { Box, CircularProgress } from "@mui/material";
 
 function ProtectedRoute({ children, allowedrole }) {
     const { isAuthenticated, role, loading } = useContext(AuthContext)
 
-    if (loading) return <div style={{ textAlign: 'center', marginTop: '20px' }}>Loading...</div>
+    if (loading) return <Box display={'flex'} alignItems={'center'} justifyContent={'center'}><CircularProgress color="secondary" size={60} thickness={5} /></Box>
     if (!isAuthenticated) return <Navigate to={'/'} />
     if (role !== allowedrole) return <Navigate to={`/${role}login`} />
 

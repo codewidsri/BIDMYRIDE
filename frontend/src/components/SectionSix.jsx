@@ -41,11 +41,11 @@ function SectionSix() {
                         // backgroundPosition: 'center',
                         // backgroundRepeat: 'no-repeat',
                         // backgroundSize: 'cover',
-                         backgroundColor:'#FFB22C'
+                        backgroundColor: '#FFB22C'
                     }}
                 >
                     {/* Left Section - Form */}
-                    <Grid item xs={12} md={5}>
+                    <Grid size={{ xs: 12, md: 5 }}>
                         <Typography variant="h4" gutterBottom fontWeight="bold">
                             Get your ride right with BidMyRide Reserve
                         </Typography>
@@ -55,7 +55,7 @@ function SectionSix() {
 
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <Grid container spacing={3} mt={2}>
-                                <Grid item xs={12} sm={6}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <DatePicker
                                         label="Select Date"
                                         value={selectedDate}
@@ -65,7 +65,7 @@ function SectionSix() {
                                         maxDate={maxDate}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <TimePicker
                                         label="Select Time"
                                         value={selectedTime}
@@ -95,7 +95,7 @@ function SectionSix() {
                     </Grid>
 
                     {/* Right Section - Benefits */}
-                    <Grid item xs={12} md={7}>
+                    <Grid size={{ xs: 12, md: 7 }}>
                         <Typography variant="h6" fontWeight="bold" gutterBottom>
                             Benefits
                         </Typography>

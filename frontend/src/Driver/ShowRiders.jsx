@@ -1,23 +1,10 @@
-import { Container, Box, Grid } from "@mui/material"
+import RiderInfo from "./RiderInfo.jsx";
 
-function ShowRiders({ incommingfare }) {
+function ShowRiders({ riderfares }) {
     return (
         <>
-            <Container>
-                <Box>
-                    <Grid container spacing={2}>
-                        
-                    </Grid>
-                </Box>
-            </Container>
-            {incommingfare && incommingfare.map((rider, id) => (
-                <h6>
-                    {rider.ridername}
-                    {rider.fare}
-                    {rider.pickup}
-                    {rider.dropoff}
-                    {rider.distance}
-                </h6>
+            {riderfares && riderfares.map((rider) => (
+                <RiderInfo rider={rider} />
             ))}
         </>
     )

@@ -6,7 +6,7 @@ function SectionNine() {
             <Box component="section">
                 <Grid container spacing={5} display={'flex'} justifyContent={'center'} alignItems="center">
                     {/* Text Section */}
-                    <Grid item xs={12} md={6} sx={{width:{lg:'50%'}}}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Typography variant="h4" fontWeight="bolder" gutterBottom>
                             Peace of mind even when it comes to price
                         </Typography>
@@ -31,7 +31,7 @@ function SectionNine() {
                         </Button>
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <CardMedia
                             component="img"
                             image="./rates.jpg"

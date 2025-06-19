@@ -16,8 +16,8 @@ function SectionFive() {
 
                 <Grid container spacing={4} display={'flex'} justifyContent={'center'} alignItems="center">
                     {services.map((service, index) => (
-                        <Grid item xs={12} sm={6} md={4} key={index}>
-                            <Card sx={{ borderRadius: 3, boxShadow: 3,padding:'8%' }}>
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+                            <Card sx={{ borderRadius: 3, boxShadow: 3, padding: '8%' }}>
                                 <CardMedia
                                     component="img"
                                     image={service.image}

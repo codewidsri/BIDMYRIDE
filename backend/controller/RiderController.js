@@ -33,13 +33,39 @@ async function Login(req, res, next) {
             return res.status(401).json({ message: 'Invalid Email or password' })
         }
         const token = jwt.sign({ _id: existingrider._id, email: existingrider.email, name: existingrider.name }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' })
-        res.cookie('rider_token', token, { httpOnly: true, secure: true, maxAge: 24 * 60 * 60 * 1000 })
+        res.cookie('rider_token', token, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 })
         const riderinfo = {
             _id: existingrider._id, name: existingrider.name, email: existingrider.email
         }
         return res.status(200).json({ message: 'Login successfull', rider: riderinfo })
     } catch (error) {
         return res.status(500).json({ message: "Something went wrong" });
+    }
+}
+
+async function UpdateLocation(req, res, next) {
+    try {
+        const { lat, lng } = req.body
+        const _id = req.rider._id;
+        const rider = await Riders.findById(_id);
+        if (!rider) {
+            return res.status(401).json({ message: 'rider not found' })
+        }
+        const updatedrider = await Riders.findByIdAndUpdate(
+            _id,
+            {
+                $set: {
+                    location: {
+                        type: 'Point',
+                        coordinates: [lng, lat]
+                    }
+                }
+            },
+            { new: true }
+        )
+        return res.status(200).json({ message: "live location was updated" })
+    } catch (error) {
+        return res.status(500).json({ message: "Server error" });
     }
 }
 
@@ -77,12 +103,21 @@ async function SearchVehicles(req, res, next) {
                 _id: 1
             }
         );
-        if(!nearbyDrivers){
-            return res.status(401).json({message:"No available drivers"})
+        if (!nearbyDrivers) {
+            return res.status(401).json({ message: "No available drivers" })
         }
         return res.status(200).json({ drivers: nearbyDrivers });
     } catch (error) {
         return res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+let s=1;
+async function BookRide(req, res, next) {
+    try {
+        console.log(req.body)
+        console.log(s++)
+    } catch (error) {
+
     }
 }
 
@@ -99,4 +134,4 @@ function Logout(req, res) {
     }
 }
 
-export { Register, Login, SearchVehicles, Logout }
+export { Register, Login, UpdateLocation, SearchVehicles, BookRide, Logout }

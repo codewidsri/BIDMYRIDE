@@ -21,7 +21,7 @@ const ridericon = L.icon({
 });
 
 
-const LocationMarker = ({ position, setPosition, notify, incommingfare }) => {
+const LocationMarker = ({ position, setPosition, notify, riderfares }) => {
     const markerRef = useRef(null);
 
     useMapEvents({
@@ -51,17 +51,17 @@ const LocationMarker = ({ position, setPosition, notify, incommingfare }) => {
             >
                 <Popup>Drag me to your location</Popup>
             </Marker>
-            {incommingfare && incommingfare.map((driver, index) => (
+            {riderfares && riderfares.map((rider, index) => (
                 <Marker
                     key={index}
                     position={[
-                        driver.pickupCoords.lat, // lat
-                        driver.pickupCoords.lng  // lng
+                        rider.pickupCoords.lat, // lat
+                        rider.pickupCoords.lng  // lng
                     ]}
                     icon={ridericon}
                 >
                     <Popup>
-                        hi
+                        {rider.ridername}
                     </Popup>
                 </Marker>
             ))}
@@ -69,9 +69,7 @@ const LocationMarker = ({ position, setPosition, notify, incommingfare }) => {
     );
 }
 
-function Map({ notify, incommingfare }) {
-
-    const [position, setPosition] = useState({ lat: 13.0827, lng: 80.2707 });
+function Map({position,setPosition, notify, riderfares }) {
 
     function getLocation() {
         if ('geolocation' in navigator) {
@@ -79,7 +77,7 @@ function Map({ notify, incommingfare }) {
                 setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
                 notify("Location data is retrieved successfully", "success");
             }, (error) => {
-                notify("Failed to retrieve location", "info");
+                notify(`Failed: ${error.message}`, "info");
             })
         } else {
             notify("Geolocation not supported by this browser", "danger");
@@ -120,7 +118,7 @@ function Map({ notify, incommingfare }) {
     return (
         <div style={{ width: '100%', height: '70dvh' }}>
 
-            <MapContainer center={position} zoom={19} style={{ width: '100%', height: '100%' }}>
+            <MapContainer center={position} zoom={10} style={{ width: '100%', height: '100%' }}>
 
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
 
@@ -130,7 +128,7 @@ function Map({ notify, incommingfare }) {
                     position={position}
                     setPosition={setPosition}
                     notify={notify}
-                    incommingfare={incommingfare}
+                    riderfares={riderfares}
                 />
 
             </MapContainer>

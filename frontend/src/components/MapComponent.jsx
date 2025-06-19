@@ -46,6 +46,7 @@ function MapComponent() {
       <div>
         <MapContainer center={position} zoom={30} style={{ height: '350px', width: '100%' }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
+          <LocationMarker position={position} setPosition={setPosition} />
         </MapContainer>
       </div>
     </Box>

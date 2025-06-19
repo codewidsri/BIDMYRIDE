@@ -4,7 +4,7 @@ import Drivers from '../models/Driver.js';
 async function VerifyDriver(req, res, next) {
     const token = req.cookies.driver_token;
     if (!token) {
-        return res.status(401).json({ message: 'Driver not found' })
+        return res.status(401).json({ message: 'token not found' })
     }
 
     try {

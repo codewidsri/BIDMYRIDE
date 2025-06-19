@@ -7,7 +7,7 @@ function SectionThree() {
             <Container>
                 <Grid container spacing={4} display={'flex'} justifyContent={'center'} alignItems="center">
                     {/* Text Section */}
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Box sx={{ maxWidth: 650 }}>
                             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
                                 Drive when you want, make what you need
@@ -45,7 +45,7 @@ function SectionThree() {
                     </Grid>
 
                     {/* Image Section */}
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Box sx={{ width: '100%', height: { xs: 300, sm: 400, md: 450 } }}>
                             <CardMedia
                                 component="img"

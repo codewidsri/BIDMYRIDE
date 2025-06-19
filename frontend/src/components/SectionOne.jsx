@@ -5,7 +5,7 @@ function SectionOne() {
         <Container>
             <Box component="section" sx={{ py: { xs: 4, md: 8 } }}>
                 <Grid container spacing={4} display={'flex'} justifyContent={'center'} alignItems="center">
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
                             BidMyRide
                         </Typography>
@@ -33,7 +33,7 @@ function SectionOne() {
                             Drive with us
                         </Button>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <CardMedia
                             component="img"
                             image="./home-hero.jpg"

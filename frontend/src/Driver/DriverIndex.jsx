@@ -7,11 +7,13 @@ import Socket from '../context/Socket.js';
 
 function DriverIndex() {
 
+    const [position, setPosition] = useState({ lat: 13.0827, lng: 80.2707 });
+
     const [show, setshow] = useState(false);
     const [showmessage, setshowmessage] = useState('')
     const [showmessagetype, setshowmessagetype] = useState('')
 
-    const [incommingfare, setincommingfare] = useState('');
+    const [riderfares, setriderfares] = useState([]);
 
     function notify(message, type) {
         setshow(true);
@@ -21,9 +23,19 @@ function DriverIndex() {
 
     useEffect(() => {
         Socket.on('driver:receivefare', ({ riderid, ridername, fare, pickup, dropoff, distance, pickupCoords }) => {
-            setincommingfare((prev) => [...prev, { riderid, ridername, fare, pickup, dropoff, distance, pickupCoords }])
-        })
-    }, [])
+            setriderfares((prev) => {
+                const exists = prev.find(r => r.riderid === riderid);
+                if (exists) {
+                    return prev.map(r => r.riderid === riderid
+                        ? { riderid, ridername, fare, pickup, dropoff, distance, pickupCoords }
+                        : r
+                    );
+                } else {
+                    return [...prev, { riderid, ridername, fare, pickup, dropoff, distance, pickupCoords }];
+                }
+            });
+        });
+    }, []);
 
     return (
         <>
@@ -41,9 +53,9 @@ function DriverIndex() {
 
             <MapUpdate notify={notify} />
 
-            <Map notify={notify} incommingfare={incommingfare} />
+            <Map notify={notify} riderfares={riderfares} position={position} setPosition={setPosition} />
 
-            <ShowRiders incommingfare={incommingfare} />
+            <ShowRiders riderfares={riderfares} />
         </>
     )
 }

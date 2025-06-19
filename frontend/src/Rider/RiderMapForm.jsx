@@ -10,14 +10,13 @@ import SelectVehicles from "./SelectVehicles.jsx";
 import Socket from "../context/Socket.js";
 import { AuthContext } from "../context/AuthContextProvider.jsx";
 
-function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, setPickupCoords, dropoffCoords, setDropoffCoords, distance, showdrivers, setshowdrivers, notify }) {
+function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, setPickupCoords, dropoffCoords, setDropoffCoords, vehicle, setVehicle, distance, showdrivers, setshowdrivers, notify }) {
     const { user } = useContext(AuthContext);
 
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [dropoffSuggestions, setDropoffSuggestions] = useState([]);
-    const [vehicle, setVehicle] = useState(null);
     const [error, setError] = useState(false);
-    const [fare, setfare] = useState('')
+    const [fare, setfare] = useState()
 
     const handleAddressChange = async (type, value) => {
         if (type === 'pickup')
@@ -26,9 +25,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
             setDropoff(value);
 
         if (value.length > 2) {
-            const res = await fetch(
-                `https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&limit=10&q=${value}`
-            );
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&limit=10&q=${value}`);
             const data = await res.json();
             if (type === 'pickup')
                 setPickupSuggestions(data);
@@ -64,12 +61,16 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                 params: {
                     pickupCoords,
                     vehicle
-                }
-            })
-            setshowdrivers(response.data.drivers)
-            notify("vehicles retrieved", "success")
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true
+            });
+            setshowdrivers(response.data.drivers);
+            notify("vehicles retrieved", "success");
         } catch (error) {
-            notify(error.response.data.message, 'danger');
+            notify(error.response?.data?.message || 'Error retrieving vehicles', 'danger');
         }
     }
 
@@ -99,7 +100,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
     function SendFare() {
         const riderid = user._id;
         const ridername = user.name;
-        Socket.emit('rider:sendfare', {riderid, ridername, fare, showdrivers, pickup, dropoff, distance , pickupCoords })
+        Socket.emit('rider:sendfare', { riderid, ridername, fare, showdrivers, pickup, dropoff, distance, pickupCoords })
     }
 
     return (
@@ -107,7 +108,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
 
             <Box component={'form'}>
 
-                <Grid container spacing={3} alignItems="center" justifyContent="center">
+                <Grid container spacing={2} alignItems="center" justifyContent="center">
 
                     <Grid size={{ xs: 12, sm: 4 }}>
                         <TextField
@@ -188,9 +189,9 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
 
             </Box>
 
-            <Box>
-                <Grid container spacing={3} alignItems="center" justifyContent="center">
-                    <Grid size={{ xs: 4 }}>
+            <Box sx={{ mt: 2, mb: 2 }}>
+                <Grid container spacing={2} alignItems="center" justifyContent="center">
+                    <Grid size={{ xs: 6 }}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -206,11 +207,12 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                             }}
                         />
                     </Grid>
-                    <Grid size={{ xs: 4 }}>
+                    <Grid size={{ xs: 6 }}>
                         <TextField
                             fullWidth
                             variant="outlined"
                             label="Recommended-Fare"
+                            type="number"
                             margin="normal"
                             value={fare}
                             onChange={(e) => setfare(e.target.value)}
@@ -223,7 +225,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                             }}
                         />
                     </Grid>
-                    <Grid size={{ xs: 4 }}>
+                    <Grid size={{ xs: 12 }}>
                         <Button
                             type="submit"
                             variant="contained"
@@ -239,6 +241,11 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                                 },
                             }}
                             onClick={SendFare}
+                            disabled={
+                                !pickupCoords?.lat || !pickupCoords?.lng ||
+                                !dropoffCoords?.lat || !dropoffCoords?.lng ||
+                                !vehicle || !fare
+                            }
                         >
                             <SendIcon sx={{ mr: 1 }} />
                             Send

@@ -7,7 +7,7 @@ function SectionFour() {
             <Container>
                 <Grid container spacing={4} display={'flex'} justifyContent={'center'} alignItems="center">
                     {/* Image Section */}
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Box sx={{ width: '100%', height: { xs: 250, sm: 350, md: 400 } }}>
                             <CardMedia
                                 component="img"
@@ -24,7 +24,7 @@ function SectionFour() {
                     </Grid>
 
                     {/* Text & Button Section */}
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Box sx={{ maxWidth: 450 }}>
                             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
                                 Login to see your recent activity

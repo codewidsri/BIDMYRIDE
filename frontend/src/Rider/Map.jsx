@@ -4,6 +4,7 @@ import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import polyline from '@mapbox/polyline';
+import axios from 'axios';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -117,7 +118,7 @@ async function getOSRMRoute(lat1, lon1, lat2, lon2) {
   }
 }
 
-function Map({ pickupCoords, dropoffCoords,setDistance, notify, showdrivers }) {
+function Map({ setPickup, pickupCoords, setPickupCoords, dropoffCoords, setDistance, notify, showdrivers }) {
 
   const [position, setPosition] = useState({ lat: 13.0827, lng: 80.2707 });
 
@@ -127,6 +128,8 @@ function Map({ pickupCoords, dropoffCoords,setDistance, notify, showdrivers }) {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
+        setPickupCoords({ lat: position.coords.latitude, lng: position.coords.longitude })
+        getAddressFromCoords(position.coords.latitude, position.coords.longitude)
         notify("Location data is retrieved successfully", "success");
       }, (error) => {
         notify("Failed to retrieve location", "info");
@@ -136,9 +139,32 @@ function Map({ pickupCoords, dropoffCoords,setDistance, notify, showdrivers }) {
     }
   }
 
+  async function getAddressFromCoords(lat, lon) {
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+    const data = await res.json();
+    setPickup(data.display_name);
+  }
+
+  async function UpdateLocation() {
+    try {
+      const configuration = {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true
+      }
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND}/rider/updatelocation`, position, configuration)
+      notify(response.data.message, 'success')
+    } catch (error) {
+      notify(error.response.data.message, 'danger')
+    }
+  }
+
   useEffect(() => {
     getLocation();
   }, [])
+
+  useEffect(() => {
+    UpdateLocation();
+  }, [position])
 
   useEffect(() => {
     async function fetchRoute() {
@@ -177,9 +203,9 @@ function Map({ pickupCoords, dropoffCoords,setDistance, notify, showdrivers }) {
   };
 
   return (
-    <div style={{ width: '100%', height: '100dvh' }}>
+    <div style={{ width: '100%', height: '80dvh', margin: 3 }}>
 
-      <MapContainer center={position} zoom={10} style={{ width: '100%', height: '100%' }}>
+      <MapContainer center={position} zoom={15} style={{ width: '100%', height: '100%' }}>
 
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
 
@@ -197,7 +223,7 @@ function Map({ pickupCoords, dropoffCoords,setDistance, notify, showdrivers }) {
         {routePoints.length > 0 && (
           <Polyline
             positions={routePoints}
-            pathOptions={{ color: 'blue', weight: 5, opacity: 0.7 }}
+            pathOptions={{ color: 'blue', weight: 3, opacity: 1 }}
           />
         )}
 

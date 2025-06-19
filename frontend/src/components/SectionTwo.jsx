@@ -13,10 +13,10 @@ function SectionTwo() {
             <Box component="section" sx={{ py: { xs: 4, md: 8 } }}>
                 <Box component="form" onSubmit={HandleChange}>
                     <Grid container spacing={4} display={'flex'} justifyContent={'center'} alignItems="center">
-                        <Grid item xs={12} md={6}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <MapComponent />
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
                                 Go Anywhere with us
                             </Typography>

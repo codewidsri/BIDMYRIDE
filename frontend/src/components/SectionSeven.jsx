@@ -6,7 +6,7 @@ function SectionSeven() {
             <Box component="section">
                 <Grid container spacing={5} display={'flex'} justifyContent={'center'} alignItems="center">
                     {/* Text Section */}
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Typography variant="h4" sx={{ fontWeight: 'bolder' }}>
                             Get Quick Rides
                         </Typography>
@@ -19,10 +19,10 @@ function SectionSeven() {
                     </Grid>
 
                     {/* Image Section */}
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Grid container spacing={2} display={'flex'}>
                             {["/nine.jpg", "/eight.jpeg", "/ten.jpg", "/eleven.jpg"].map((src, index) => (
-                                <Grid item xs={6} key={index}>
+                                <Grid size={{ xs: 6 }} key={index}>
                                     <CardMedia
                                         component="img"
                                         image={src}

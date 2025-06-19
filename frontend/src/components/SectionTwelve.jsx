@@ -5,22 +5,7 @@ function SectionTwelve() {
         <Container sx={{ marginTop: '5%' }}>
             <Box component="section">
                 <Grid container spacing={5} display={'flex'} justifyContent={'center'} alignItems="center">
-                    {/* Image Section */}
-                    <Grid item xs={12} md={6}>
-                        <CardMedia
-                            component="img"
-                            image="/three.jpg"
-                            sx={{
-                                width: {xs:380, sm : 400, md: 500, lg:500},
-                                height: { xs: 200, sm: 300, md: 350 },
-                                borderRadius: '20px',
-                                objectFit: 'cover'
-                            }}
-                        />
-                    </Grid>
-
-                    {/* Text Section */}
-                    <Grid item xs={12} md={6} sx={{width:{lg:"50%"}}}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bolder' }}>
                             Safety for all
                         </Typography>
@@ -43,6 +28,18 @@ function SectionTwelve() {
                         >
                             Know More
                         </Button>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                        <CardMedia
+                            component="img"
+                            image="/three.jpg"
+                            sx={{
+                                width: { xs: 380, sm: 400, md: 500, lg: 500 },
+                                height: { xs: 200, sm: 300, md: 350 },
+                                borderRadius: '20px',
+                                objectFit: 'cover'
+                            }}
+                        />
                     </Grid>
                 </Grid>
             </Box>
