@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 import { Toast, ToastContainer } from 'react-bootstrap'
 import { AuthContext } from "../context/AuthContextProvider";
+import Socket from "../context/Socket.js";
 
 function DriverLogin() {
      const { dispatch } = useContext(AuthContext);
@@ -30,6 +31,8 @@ function DriverLogin() {
             setshowmessage(response.data.message)
             setshowmessagetype('success')
             dispatch({ type: "loginsuccess", payload: { user: response.data.driver, role: 'driver' } })
+            const driverid = response.data.driver._id;
+            Socket.emit("driver:join", { driverid })
             setTimeout(() => {
                 navigate('/driver/')
             }, 2000);
@@ -82,6 +85,7 @@ function DriverLogin() {
                     </Box>
                     <Box component={'div'} display={'flex'} flexDirection={'column'} alignItems={'center'} padding={2}>
                         <Link component={'button'} onClick={() => navigate('/driverregister')}>Don't have an Account? Click here</Link>
+                        <Link component={'button'} onClick={() => navigate('/riderlogin')}>Want to take Ride?</Link>
                     </Box>
                 </Paper>
             </Container>

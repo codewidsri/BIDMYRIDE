@@ -1,6 +1,7 @@
 import Drivers from '../models/Driver.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import Rides from '../models/Ride.js';
 
 async function Register(req, res, next) {
     try {
@@ -35,9 +36,9 @@ async function Login(req, res, next) {
         const token = jwt.sign({ _id: existingdriver._id, email: existingdriver.email, name: existingdriver.name }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' })
         res.cookie('driver_token', token, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 })
         const driverinfo = {
-            _id: existingdriver._id, name: existingdriver.name, email: existingdriver.email, isavailable: false
+            _id: existingdriver._id, name: existingdriver.name, email: existingdriver.email
         }
-        return res.status(200).json({ message: 'Login successfull', driver: driverinfo })
+        return res.status(200).json({ message: 'Logged In', driver: driverinfo })
     } catch (error) {
         return res.status(500).json({ message: "Something went wrong" });
     }
@@ -81,7 +82,7 @@ async function ChangeAvailabilty(req, res, next) {
             { $set: { isavailable: !driver.isavailable } },
             { new: true }
         );
-        return res.status(200).json({ message: "Availability updated successfully", isavailable: updateddriver.isavailable, });
+        return res.status(200).json({ message: "Availability updated", isavailable: updateddriver.isavailable, });
     } catch (error) {
         return res.status(500).json({ message: "Server error" });
     }
@@ -96,6 +97,22 @@ async function RetrieveAvailability(req, res, next) {
         }
         const driveravailability = await Drivers.findById(_id, { _id: 0, isavailable: 1 });
         return res.status(200).json({ message: "Availability Retrieved", isavailable: driveravailability.isavailable })
+    } catch (error) {
+        return res.status(500).json({ message: "server error" })
+    }
+}
+
+async function VerifyOTP(req, res, next) {
+    try {
+        const { rideid, enteredOtp } = req.body;
+        const ride = await Rides.findById(rideid);
+        if (ride.otp == enteredOtp) {
+            ride.ridestatus = "started";
+            await ride.save();
+            return res.status(201).json({ message: 'OTP verified Ride Started', ride })
+        } else {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
     } catch (error) {
         return res.status(500).json({ message: "server error" })
     }
@@ -116,4 +133,4 @@ async function Logout(req, res) {
     }
 }
 
-export { Register, Login, UpdateLocation, ChangeAvailabilty, RetrieveAvailability, Logout }
+export { Register, Login, UpdateLocation, ChangeAvailabilty, RetrieveAvailability, VerifyOTP, Logout }

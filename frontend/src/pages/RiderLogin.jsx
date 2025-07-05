@@ -3,7 +3,8 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Toast, ToastContainer } from 'react-bootstrap'
-import { AuthContext } from '../context/AuthContextProvider';
+import { AuthContext } from '../context/AuthContextProvider.jsx';
+import Socket from '../context/Socket.js';
 
 function RiderLogin() {
     const { dispatch } = useContext(AuthContext);
@@ -31,6 +32,8 @@ function RiderLogin() {
             setshowmessage(response.data.message)
             setshowmessagetype('success')
             dispatch({ type: "loginsuccess", payload: { user: response.data.rider, role: 'rider' } })
+            const riderid = response.data.rider._id;
+            Socket.emit('rider:join', { riderid })
             setTimeout(() => {
                 navigate('/rider/')
             }, 2000);

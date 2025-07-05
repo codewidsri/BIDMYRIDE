@@ -20,13 +20,13 @@ const driverIcon = L.icon({
   popupAnchor: [0, -40], // point from which the popup should open relative to the iconAnchor
 });
 
-const LocationMarker = ({ position, setPosition, notify, pickupCoords, dropoffCoords, showdrivers }) => {
+const LocationMarker = ({ position, setPosition, pickupCoords, dropoffCoords, showdrivers, customAlert }) => {
   const markerRef = useRef(null);
 
   useMapEvents({
     click(e) {
       setPosition(e.latlng);
-      notify("Location pinned successfully!", "success");
+      customAlert("Location pinned successfully!", "success")
     },
   });
 
@@ -35,7 +35,7 @@ const LocationMarker = ({ position, setPosition, notify, pickupCoords, dropoffCo
       const marker = markerRef.current;
       if (marker != null) {
         setPosition(marker.getLatLng());
-        notify("Location updated by dragging!", "success");
+        customAlert("Location updated by dragging!", "success")
       }
     },
   };
@@ -92,33 +92,7 @@ const LocationMarker = ({ position, setPosition, notify, pickupCoords, dropoffCo
   );
 };
 
-async function getOSRMRoute(lat1, lon1, lat2, lon2) {
-
-  const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=polyline`;
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error('OSRM routing API error');
-  }
-
-  const data = await response.json();
-
-  if (data.code !== 'Ok' || data.routes.length === 0) {
-    throw new Error('No route found');
-  }
-
-  const distanceInMeters = data.routes[0].distance;
-  const geometry = data.routes[0].geometry; // encoded polyline string
-  const routePoints = polyline.decode(geometry).map(([lat, lng]) => ({ lat, lng }));
-
-  return {
-    distance: distanceInMeters / 1000, // km
-    routePoints,
-  }
-}
-
-function Map({ setPickup, pickupCoords, setPickupCoords, dropoffCoords, setDistance, notify, showdrivers }) {
+function Map({ setPickup, pickupCoords, setPickupCoords, dropoffCoords, setDistance, notify, showdrivers, customAlert }) {
 
   const [position, setPosition] = useState({ lat: 13.0827, lng: 80.2707 });
 
@@ -130,12 +104,12 @@ function Map({ setPickup, pickupCoords, setPickupCoords, dropoffCoords, setDista
         setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
         setPickupCoords({ lat: position.coords.latitude, lng: position.coords.longitude })
         getAddressFromCoords(position.coords.latitude, position.coords.longitude)
-        notify("Location data is retrieved successfully", "success");
+        customAlert("Location fetched", "success")
       }, (error) => {
-        notify("Failed to retrieve location", "info");
+        customAlert("Failed to retrieve locationn", 'warning')
       })
     } else {
-      notify("Geolocation not supported by this browser", "danger");
+      customAlert("Geolocation not supported by this browser", "error")
     }
   }
 
@@ -152,9 +126,9 @@ function Map({ setPickup, pickupCoords, setPickupCoords, dropoffCoords, setDista
         withCredentials: true
       }
       const response = await axios.post(`${import.meta.env.VITE_BACKEND}/rider/updatelocation`, position, configuration)
-      notify(response.data.message, 'success')
+      customAlert(response.data.message, 'success')
     } catch (error) {
-      notify(error.response.data.message, 'danger')
+      customAlert(error.response.data.message, 'error')
     }
   }
 
@@ -167,20 +141,40 @@ function Map({ setPickup, pickupCoords, setPickupCoords, dropoffCoords, setDista
   }, [position])
 
   useEffect(() => {
+    async function getOSRMRoute(lat1, lon1, lat2, lon2) {
+
+      const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=polyline`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('OSRM routing API error');
+      }
+
+      const data = await response.json();
+
+      if (data.code !== 'Ok' || data.routes.length === 0) {
+        throw new Error('No route found');
+      }
+
+      const distanceInMeters = data.routes[0].distance;
+      const geometry = data.routes[0].geometry; // encoded polyline string
+      const routePoints = polyline.decode(geometry).map(([lat, lng]) => ({ lat, lng }));
+      return {
+        distance: distanceInMeters / 1000, // km
+        routePoints,
+      }
+    }
+
     async function fetchRoute() {
       if (pickupCoords && dropoffCoords) {
         try {
-          const { distance, routePoints } = await getOSRMRoute(
-            pickupCoords.lat,
-            pickupCoords.lng,
-            dropoffCoords.lat,
-            dropoffCoords.lng
-          );
-          setDistance(distance);
+          const { distance, routePoints } = await getOSRMRoute( pickupCoords.lat, pickupCoords.lng, dropoffCoords.lat, dropoffCoords.lng );
+          setDistance(distance.toFixed(2));
           setRoutePoints(routePoints);
-          notify(`Route distance: ${distance.toFixed(2)} km`, 'success');
+          customAlert(`Route distance: ${distance.toFixed(2)} km`, 'success')
         } catch (error) {
-          notify('Could not calculate route distance', 'danger');
+          customAlert('Could not calculate route distance', 'error')
           setDistance(null);
           setRoutePoints([]);
         }
@@ -188,7 +182,6 @@ function Map({ setPickup, pickupCoords, setPickupCoords, dropoffCoords, setDista
     }
     fetchRoute();
   }, [pickupCoords, dropoffCoords])
-
 
   const MapFocus = ({ center }) => {
     const map = useMap();
@@ -214,17 +207,14 @@ function Map({ setPickup, pickupCoords, setPickupCoords, dropoffCoords, setDista
         <LocationMarker
           position={position}
           setPosition={setPosition}
-          notify={notify}
+          customAlert={customAlert}
           pickupCoords={pickupCoords}
           dropoffCoords={dropoffCoords}
           showdrivers={showdrivers}
         />
 
         {routePoints.length > 0 && (
-          <Polyline
-            positions={routePoints}
-            pathOptions={{ color: 'blue', weight: 3, opacity: 1 }}
-          />
+          <Polyline positions={routePoints} pathOptions={{ color: 'blue', weight: 3, opacity: 1 }} />
         )}
 
       </MapContainer>

@@ -3,17 +3,9 @@ import DriverProfile from './DriverProfile.jsx'
 import DriverDashboard from './DriverDashboard.jsx'
 import DriverIndex from "./DriverIndex.jsx";
 import Navbar from "./NavBar.jsx";
-import { AuthContext } from "../context/AuthContextProvider.jsx";
-import Socket from "../context/Socket.js";
-import { useEffect, useContext } from "react";
+import ViewRide from "./ViewRide.jsx";
 
 function DriverHome() {
-    const { user } = useContext(AuthContext);
-
-    useEffect(() => {
-        const driverid = user._id;
-        Socket.emit("driver:join", { driverid })
-    }, [])
 
     return (
         <>
@@ -22,6 +14,7 @@ function DriverHome() {
                 <Route index element={<DriverIndex />} />
                 <Route path="profile" element={<DriverProfile />} />
                 <Route path="dashboard" element={<DriverDashboard />} />
+                <Route path="viewride" element={<ViewRide />} />
             </Routes>
             <Outlet />
         </>

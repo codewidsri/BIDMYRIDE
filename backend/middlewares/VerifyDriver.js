@@ -17,7 +17,6 @@ async function VerifyDriver(req, res, next) {
             _id: decoded._id,
             email: decoded.email,
             name: decoded.name,
-            isavailable : checkdriver.isavailable
         }
         next();
     } catch (error) {

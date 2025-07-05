@@ -28,13 +28,15 @@ const io = new Server(server, {
 let onlineriders = {}, onlinedrivers = {};
 
 io.on("connection", (socket) => {
-    
+
     socket.on("rider:join", ({ riderid }) => {
         onlineriders[riderid] = socket.id;
+        console.log(riderid + " rider was connected")
     });
 
     socket.on("driver:join", ({ driverid }) => {
         onlinedrivers[driverid] = socket.id;
+        console.log(driverid + " driver was connected")
     });
 
     socket.on("rider:sendfare", ({ riderid, ridername, fare, showdrivers, pickup, dropoff, distance, pickupCoords, }) => {
@@ -44,8 +46,14 @@ io.on("connection", (socket) => {
                 io.to(driversocket).emit("driver:receivefare", { riderid, ridername, fare, pickup, dropoff, distance, pickupCoords, });
             }
         });
-    }
-    );
+    });
+
+    socket.on("rider:confirmride", ({ rideid, riderid, driverid, fare }) => {
+        const driversocket = onlinedrivers[driverid];
+        if (driversocket) {
+            io.to(driversocket).emit("driver:confirmedride", { rideid, riderid, fare })
+        }
+    });
 
     socket.on("driver:sendfare", ({ riderid, driverid, fare }) => {
         const ridersocket = onlineriders[riderid];
@@ -54,12 +62,33 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("driver:acceptfare", ({ driverid, riderid, fare }) => {
+    socket.on("driver:acceptedfare", ({ driverid, riderid, fare }) => {
         const ridersocket = onlineriders[riderid];
         if (ridersocket) {
             io.to(ridersocket).emit("rider:acceptedfare", { driverid, fare });
         }
     });
+
+    socket.on("driver:ridestarted", ({ riderid, driverid }) => {
+        const ridersocket = onlineriders[riderid];
+        if (ridersocket) {
+            io.to(ridersocket).emit("rider:ridestarted", { driverid })
+        }
+    })
+
+    socket.on("rider:riderlivelocation", ({ ridercoords, driverid }) => {
+        const driversocket = onlinedrivers[driverid];
+        if (driversocket) {
+            io.to(driversocket).emit("driver:riderlivelocation", { ridercoords })
+        }
+    })
+
+    socket.on("driver:driverlivelocation", ({ drivercoords, riderid }) => {
+        const ridersocket = onlineriders[riderid];
+        if (ridersocket) {
+            io.to(ridersocket).emit("rider:driverlivelocation", { drivercoords })
+        }
+    })
 
     socket.on("disconnect", () => {
         for (let [id, sid] of Object.entries(onlinedrivers)) {

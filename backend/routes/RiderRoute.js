@@ -11,7 +11,7 @@ router.route('/verify').get(VerifyRider, (req, res) => {
 })
 router.route('/updatelocation').post(VerifyRider, UpdateLocation)
 router.route('/searchvehicles').get(VerifyRider, SearchVehicles)
-router.route('/bookride').post(VerifyRider,BookRide)
+router.route('/bookride').post(VerifyRider, BookRide)
 router.route('/logout').post(Logout)
 
 export default router;

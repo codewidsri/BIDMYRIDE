@@ -3,9 +3,13 @@ import { deepPurple } from "@mui/material/colors";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContextProvider.jsx";
 import axios from "axios";
+import Socket from "../context/Socket.js";
+import { useNavigate } from "react-router-dom";
 
-function ShowDrivers({ showdrivers, driverfares, pickup, dropoff, pickupCoords, dropoffCoords, vehicle, distance , notify}) {
+function ShowDrivers({ showdrivers, driverfares, pickup, dropoff, pickupCoords, dropoffCoords, vehicle, distance, customAlert }) {
+
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate()
 
   async function handleAccept(driverid, fare, vehiclenumber) {
     try {
@@ -14,17 +18,36 @@ function ShowDrivers({ showdrivers, driverfares, pickup, dropoff, pickupCoords, 
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true
       }
+      const pickupcoords = {
+        type: 'Point',
+        coordinates: [parseFloat(pickupCoords.lng), parseFloat(pickupCoords.lat)]
+      }
+      const dropoffcoords = {
+        type: 'Point',
+        coordinates: [parseFloat(dropoffCoords.lng), parseFloat(dropoffCoords.lat)]
+      }
       const datatosend = {
-        riderid, driverid, pickup, dropoff, pickupCoords, dropoffCoords, distance, fare , vehicle, vehiclenumber
+        riderid, driverid, pickup, dropoff, pickupcoords, dropoffcoords, distance, fare, vehicle, vehiclenumber
       }
       const response = await axios.post(`${import.meta.env.VITE_BACKEND}/rider/bookride`, datatosend, configuration)
+      customAlert(response.data.message, "success")
+      const rideid = response.data.ride._id;
+      Socket.emit("rider:confirmride", { rideid, riderid, driverid, fare });
+      localStorage.setItem('ride', JSON.stringify(response.data.ride))
+      console.log(response.data.ride)
+      navigate('/rider/viewride', {
+        state: {
+          ride: response.data.ride
+        }
+      })
     } catch (error) {
-        notify(error.response.data.message)
+      customAlert(error.response.data.message, "error")
     }
   }
 
   return (
     <Container sx={{ mt: 8, mb: 6 }}>
+
       <Typography variant="h5" gutterBottom fontWeight="bold" textAlign="center">
         Available Drivers
       </Typography>
@@ -122,7 +145,7 @@ function ShowDrivers({ showdrivers, driverfares, pickup, dropoff, pickupCoords, 
                             </Button>
                           </>
                         ) : (
-                          <CircularProgress color="secondary" size={60} thickness={5} />
+                          ""
                         )
                       }
                     </CardActions>

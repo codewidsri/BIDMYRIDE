@@ -10,7 +10,7 @@ import SelectVehicles from "./SelectVehicles.jsx";
 import Socket from "../context/Socket.js";
 import { AuthContext } from "../context/AuthContextProvider.jsx";
 
-function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, setPickupCoords, dropoffCoords, setDropoffCoords, vehicle, setVehicle, distance, showdrivers, setshowdrivers, notify }) {
+function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, setPickupCoords, dropoffCoords, setDropoffCoords, vehicle, setVehicle, distance, showdrivers, setshowdrivers , customAlert}) {
     const { user } = useContext(AuthContext);
 
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
@@ -68,9 +68,9 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                 withCredentials: true
             });
             setshowdrivers(response.data.drivers);
-            notify("vehicles retrieved", "success");
+            customAlert("vehicles retrieved","success")
         } catch (error) {
-            notify(error.response?.data?.message || 'Error retrieving vehicles', 'danger');
+            customAlert(error.response?.data?.message || 'Error retrieving vehicles',"error")
         }
     }
 
@@ -110,7 +110,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
 
                 <Grid container spacing={2} alignItems="center" justifyContent="center">
 
-                    <Grid size={{ xs: 12, sm: 4 }}>
+                    <Grid size={{ xs: 12, sm: 6 ,lg:4}}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -143,7 +143,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                         )}
                     </Grid>
 
-                    <Grid size={{ xs: 12, sm: 4 }}>
+                    <Grid size={{ xs: 12, sm: 6,lg:4 }}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -176,7 +176,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                         )}
                     </Grid>
 
-                    <Grid size={{ xs: 12, sm: 4 }} >
+                    <Grid size={{ xs: 12, sm: 6 ,lg:4}} >
                         <SelectVehicles
                             vehicle={vehicle}
                             setVehicle={setVehicle}
@@ -215,7 +215,7 @@ function RiderMapForm({ pickup, setPickup, dropoff, setDropoff, pickupCoords, se
                             type="number"
                             margin="normal"
                             value={fare}
-                            onChange={(e) => setfare(e.target.value)}
+                            onChange={(e) => setfare(parseFloat(e.target.value))}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">

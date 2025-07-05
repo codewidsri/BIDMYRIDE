@@ -11,7 +11,8 @@ const RideSchema = new mongoose.Schema({
   fare: { type: Number, required: true },
   vehicletype: { type: String, enum: ['bike', 'auto', 'car'], required: true },
   vehiclenumber: { type: String, required: true },
-  status: { type: String, enum: ['confirmed', 'started', 'completed', 'cancelled'], default: 'confirmed'},
+  otp: { type: Number, required: true },
+  ridestatus: { type: String, enum: ['confirmed', 'started', 'completed', 'cancelled'], default: 'confirmed'},
   createdAt: { type: Date, default: Date.now }
 });
 

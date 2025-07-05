@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography, Grid, Box, Button, TextField, useForkRef } from "@mui/material";
+import { Card, CardContent, Typography, Grid, Box, Button, TextField } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
@@ -7,10 +7,15 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContextProvider";
 import Socket from "../context/Socket.js";
 
-const RiderInfo = ({ rider }) => {
+const RiderInfo = ({ rider, acceptedride }) => {
+
     const { ridername, fare, pickup, dropoff, distance, riderid } = rider;
+
     const [bidAmount, setBidAmount] = useState("");
+
     const { user } = useContext(AuthContext);
+
+    const accepted = acceptedride?.[riderid] || null;
 
     const handleSendBid = () => {
         if (!bidAmount || isNaN(bidAmount)) return;
@@ -24,7 +29,7 @@ const RiderInfo = ({ rider }) => {
 
     function handleAccept() {
         const driverid = user._id;
-        Socket.emit('driver:acceptfare', { driverid, riderid, fare })
+        Socket.emit('driver:acceptedfare', { driverid, riderid, fare })
     }
 
     return (
@@ -42,7 +47,7 @@ const RiderInfo = ({ rider }) => {
             <CardContent>
                 <Grid container spacing={2}>
                     {/* Rider Name */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Box display="flex" alignItems="center">
                             <PersonIcon color="primary" sx={{ mr: 1 }} />
                             <Typography variant="h6">{ridername}</Typography>
@@ -50,7 +55,7 @@ const RiderInfo = ({ rider }) => {
                     </Grid>
 
                     {/* Fare and Distance */}
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <Box display="flex" alignItems="center">
                             <AttachMoneyIcon color="success" sx={{ mr: 1 }} />
                             <Typography variant="body1" fontWeight={500}>
@@ -59,7 +64,7 @@ const RiderInfo = ({ rider }) => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <Box display="flex" alignItems="center">
                             <DirectionsIcon color="info" sx={{ mr: 1 }} />
                             <Typography variant="body1" fontWeight={500}>
@@ -69,7 +74,7 @@ const RiderInfo = ({ rider }) => {
                     </Grid>
 
                     {/* Pickup & Dropoff */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Box display="flex" alignItems="center">
                             <LocationOnIcon color="error" sx={{ mr: 1 }} />
                             <Typography variant="body2">
@@ -78,7 +83,7 @@ const RiderInfo = ({ rider }) => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Box display="flex" alignItems="center">
                             <LocationOnIcon color="secondary" sx={{ mr: 1 }} />
                             <Typography variant="body2">
@@ -88,7 +93,7 @@ const RiderInfo = ({ rider }) => {
                     </Grid>
 
                     {/* Bid Input */}
-                    <Grid item xs={12} sm={8}>
+                    <Grid size={{ xs: 12, sm: 8 }}>
                         <TextField
                             fullWidth
                             label="Enter Your Fare"
@@ -99,7 +104,7 @@ const RiderInfo = ({ rider }) => {
                             variant="outlined"
                         />
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <Button
                             fullWidth
                             variant="contained"
@@ -112,23 +117,25 @@ const RiderInfo = ({ rider }) => {
                     </Grid>
 
                     {/* Accept & Reject */}
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <Button
-                            variant="outlined"
+                            variant={accepted ? "contained" : "outlined"}
                             color="success"
                             fullWidth
                             sx={{ fontWeight: "bold" }}
                             onClick={handleAccept}
+                            disabled={accepted ? true : false}
                         >
-                            Accept
+                            {accepted ? "Accepted" : "Accept"}
                         </Button>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <Button
                             variant="outlined"
                             color="error"
                             fullWidth
                             sx={{ fontWeight: "bold" }}
+                            disabled={accepted ? true : false}
                         >
                             Reject
                         </Button>

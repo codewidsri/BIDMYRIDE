@@ -2,6 +2,7 @@ import Riders from "../models/Rider.js";
 import Drivers from "../models/Driver.js"
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
+import Rides from "../models/Ride.js";
 
 async function Register(req, res, next) {
     try {
@@ -35,7 +36,7 @@ async function Login(req, res, next) {
         const token = jwt.sign({ _id: existingrider._id, email: existingrider.email, name: existingrider.name }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' })
         res.cookie('rider_token', token, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 })
         const riderinfo = {
-            _id: existingrider._id, name: existingrider.name, email: existingrider.email
+            _id: existingrider._id, name: existingrider.name, email: existingrider.email, phone: existingrider.phone, address: existingrider.address
         }
         return res.status(200).json({ message: 'Login successfull', rider: riderinfo })
     } catch (error) {
@@ -111,13 +112,18 @@ async function SearchVehicles(req, res, next) {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 }
-let s=1;
+
 async function BookRide(req, res, next) {
     try {
-        console.log(req.body)
-        console.log(s++)
+        const { riderid, driverid, pickup, dropoff, pickupcoords, dropoffcoords, distance, fare, vehicle, vehiclenumber } = req.body;
+        const otp = Math.floor(1000 + Math.random() * 9000);
+        const newride = new Rides({
+            riderId: riderid, driverId: driverid, pickup, dropoff, pickupCoords: pickupcoords, dropoffCoords: dropoffcoords, distance, fare, vehicletype: vehicle, vehiclenumber, otp, ridestatus: 'confirmed'
+        })
+        await newride.save();
+        return res.status(201).json({ message: 'ride booked', ride: newride })
     } catch (error) {
-
+        return res.status(500).json({ message: 'Internal server error' })
     }
 }
 
@@ -130,7 +136,7 @@ function Logout(req, res) {
         });
         return res.status(200).json({ message: 'Logged out successfully' });
     } catch (error) {
-        return res.status(500).json({ message: 'something went wrong' });
+        return res.status(500).json({ message: 'Internal server error' });
     }
 }
 

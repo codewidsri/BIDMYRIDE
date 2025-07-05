@@ -1,9 +1,9 @@
 import Map from "./Map.jsx";
 import RiderMapForm from "./RiderMapForm.jsx";
 import { useEffect, useState } from 'react';
-import { Toast, ToastContainer } from 'react-bootstrap'
 import ShowDrivers from "./ShowDrivers.jsx";
 import Socket from "../context/Socket.js";
+import CustomAlert from "../components/CustomAlert.jsx";
 
 function RiderIndex() {
 
@@ -19,18 +19,12 @@ function RiderIndex() {
     const [showdrivers, setshowdrivers] = useState(null);
     const [driverfares, setdriverfares] = useState({});
 
-    const [show, setshow] = useState(false);
-    const [showmessage, setshowmessage] = useState('')
-    const [showmessagetype, setshowmessagetype] = useState('')
-
-    function notify(message, type) {
-        setshowmessage(message);
-        setshowmessagetype(type);
-        setshow(true);
-    }
+    const [alert, setAlert] = useState({ open: false, message: '', variant: 'success' });
+    const customAlert = (message, variant = 'info') => {
+        setAlert({ open: true, message, variant });
+    };
 
     useEffect(() => {
-
         Socket.on('rider:receivefare', ({ driverid, fare }) => {
             setdriverfares((prev) => ({ ...prev, [driverid]: fare }))
         })
@@ -38,23 +32,12 @@ function RiderIndex() {
         Socket.on('rider:acceptedfare', ({ driverid, fare }) => {
             setdriverfares((prev) => ({ ...prev, [driverid]: fare }))
         })
-
     }, [])
 
     return (
         <>
 
-            <ToastContainer position="top-center" className="p-3 m-3">
-                <Toast bg={showmessagetype} show={show} onClose={() => setshow(!show)} delay={5000} autohide className="text-white">
-                    <Toast.Header>
-                        <strong className="me-auto">Notification</strong>
-                        <small>just now</small>
-                    </Toast.Header>
-                    <Toast.Body className="text-center">
-                        {showmessage}
-                    </Toast.Body>
-                </Toast>
-            </ToastContainer>
+            <CustomAlert  open={alert.open} message={alert.message} variant={alert.variant} onClose={() => setAlert({ ...alert, open: false })} />
 
             <RiderMapForm
                 pickup={pickup}
@@ -70,12 +53,12 @@ function RiderIndex() {
                 distance={distance}
                 showdrivers={showdrivers}
                 setshowdrivers={setshowdrivers}
-                notify={notify}
+                customAlert={customAlert}
             />
 
-            <Map setPickup={setPickup} pickupCoords={pickupCoords} setPickupCoords={setPickupCoords} dropoffCoords={dropoffCoords} setDistance={setDistance} notify={notify} showdrivers={showdrivers} />
+            <Map setPickup={setPickup} pickupCoords={pickupCoords} setPickupCoords={setPickupCoords} dropoffCoords={dropoffCoords} setDistance={setDistance} showdrivers={showdrivers} customAlert={customAlert} />
 
-            <ShowDrivers showdrivers={showdrivers} driverfares={driverfares} pickup={pickup} dropoff={dropoff} pickupCoords={pickupCoords} dropoffCoords={dropoffCoords} vehicle={vehicle} distance={distance} notify={notify} />
+            <ShowDrivers showdrivers={showdrivers} driverfares={driverfares} pickup={pickup} dropoff={dropoff} pickupCoords={pickupCoords} dropoffCoords={dropoffCoords} vehicle={vehicle} distance={distance} customAlert={customAlert} />
 
         </>
     )
