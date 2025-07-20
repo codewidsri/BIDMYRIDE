@@ -5,20 +5,20 @@ const RideSchema = new mongoose.Schema({
   driverId: { type: mongoose.Schema.Types.ObjectId, ref: "Driver", required: true },
   pickup: { type: String, required: true },
   dropoff: { type: String, required: true },
-  pickupCoords: { type: { type: String, default: 'Point' }, coordinates: { type: [Number], required: true }},
-  dropoffCoords: { type: { type: String, default: 'Point' }, coordinates: { type: [Number], required: true }},
+  pickupCoords: { type: { type: String, default: 'Point' }, coordinates: { type: [Number], required: true } },
+  dropoffCoords: { type: { type: String, default: 'Point' }, coordinates: { type: [Number], required: true } },
   distance: { type: Number, required: true },
   fare: { type: Number, required: true },
   vehicletype: { type: String, enum: ['bike', 'auto', 'car'], required: true },
   vehiclenumber: { type: String, required: true },
   otp: { type: Number, required: true },
-  ridestatus: { type: String, enum: ['confirmed', 'started', 'completed', 'cancelled'], default: 'confirmed'},
+  ridestatus: { type: String, enum: ['confirmed', 'started', 'completed', 'cancelled'], default: 'confirmed' },
   createdAt: { type: Date, default: Date.now }
 });
 
 RideSchema.index({ pickupCoords: "2dsphere" });
 RideSchema.index({ dropoffCoords: "2dsphere" });
 
-const Rides = mongoose.model("Rides",RideSchema);
+const Rides = mongoose.model("Rides", RideSchema);
 
 export default Rides;

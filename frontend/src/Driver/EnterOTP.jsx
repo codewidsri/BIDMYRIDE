@@ -39,7 +39,7 @@ function EnterOtp({ rideid, customAlert ,setride}) {
                 localStorage.setItem('ride', JSON.stringify(response.data.ride))
                 customAlert("OTP verified", "success")
                 setride(response.data.ride)
-                Socket.emit("driver:ridestarted", { riderid: response.data.ride.riderId, driverid: response.data.ride.driverId })
+                Socket.emit("driver:ridestarted", { riderid: response.data.ride.riderId })
             } catch (error) {
                 customAlert(error.response.data.message, "error")
             }

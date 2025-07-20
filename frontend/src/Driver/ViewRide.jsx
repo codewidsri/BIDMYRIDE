@@ -1,22 +1,26 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import EnterOtp from "./EnterOTP.jsx";
 import ViewRideMap from "./ViewRideMap.jsx";
-import CustomAlert from "../components/CustomAlert.jsx";
 import { useState } from "react";
+import { useEffect } from "react";
+import Socket from "../context/Socket.js";
 
-function ViewRide() {
+function ViewRide({ customAlert }) {
     const location = useLocation();
     const { rideid } = location.state || {};
     const [ride, setride] = useState(null);
 
-    const [alert, setAlert] = useState({ open: false, message: '', variant: 'success' });
-    const customAlert = (message, variant = 'info') => {
-        setAlert({ open: true, message, variant });
-    };
+    const navigate = useNavigate()
+    useEffect(() => {
+        Socket.on("driver:riderridefinshed", () => {
+            customAlert("Ride Completed")
+            localStorage.removeItem("ride")
+            navigate("/driver/")
+        })
+    },[])
 
     return (
         <>
-            <CustomAlert open={alert.open} message={alert.message} variant={alert.variant} onClose={() => setAlert({ ...alert, open: false })} />
             <EnterOtp rideid={rideid} customAlert={customAlert} setride={setride} />
             {ride && <ViewRideMap ride={ride} />}
         </>

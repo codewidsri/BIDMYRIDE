@@ -1,34 +1,19 @@
 import Map from "./Map.jsx";
 import MapUpdate from "./MapUpdate.jsx";
-import { Toast, ToastContainer } from 'react-bootstrap'
 import { useState, useEffect } from "react";
 import ShowRiders from './ShowRiders.jsx';
 import Socket from '../context/Socket.js';
 import { useNavigate } from "react-router-dom";
 
-function DriverIndex() {
-
+function DriverIndex({ customAlert }) {
     const navigate = useNavigate();
-
     const [position, setPosition] = useState({ lat: 13.0827, lng: 80.2707 });
-
-    const [show, setshow] = useState(false);
-    const [showmessage, setshowmessage] = useState('');
-    const [showmessagetype, setshowmessagetype] = useState('');
-
-    const [riderfares, setriderfares] = useState([]);
+    const [riders, setriders] = useState([]);
     const [acceptedride, setacceptedride] = useState({});
 
-    function notify(message, type) {
-        setshow(true);
-        setshowmessage(message);
-        setshowmessagetype(type);
-    }
-
     useEffect(() => {
-
         Socket.on('driver:receivefare', ({ riderid, ridername, fare, pickup, dropoff, distance, pickupCoords }) => {
-            setriderfares((prev) => {
+            setriders((prev) => {
                 const exists = prev.find(r => r.riderid === riderid);
                 if (exists) {
                     return prev.map(r => r.riderid === riderid
@@ -40,46 +25,27 @@ function DriverIndex() {
                 }
             });
         });
-
     }, []);
 
     useEffect(() => {
-
         Socket.on("driver:confirmedride", ({ rideid, riderid, fare }) => {
             setacceptedride((prev) => ({ ...prev, [riderid]: fare }));
-            navigate('/driver/viewride',{
-                state:{
+            navigate('/driver/viewride', {
+                state: {
                     rideid
                 }
             })
         });
-
         return () => {
             Socket.off("driver:confirmedride");
         };
-
     }, []);
-
 
     return (
         <>
-            <ToastContainer position="top-center" className="p-3 m-3">
-                <Toast bg={showmessagetype} show={show} onClose={() => setshow(!show)} delay={5000} autohide className="text-white">
-                    <Toast.Header>
-                        <strong className="me-auto">Notification</strong>
-                        <small>just now</small>
-                    </Toast.Header>
-                    <Toast.Body className="text-center">
-                        {showmessage}
-                    </Toast.Body>
-                </Toast>
-            </ToastContainer>
-
-            <MapUpdate notify={notify} />
-
-            <Map notify={notify} riderfares={riderfares} position={position} setPosition={setPosition} />
-
-            <ShowRiders riderfares={riderfares} acceptedride={acceptedride} />
+            <MapUpdate customAlert={customAlert} />
+            <Map customAlert={customAlert} riders={riders} position={position} setPosition={setPosition} />
+            <ShowRiders riders={riders} acceptedride={acceptedride} />
         </>
     )
 }

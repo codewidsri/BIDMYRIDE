@@ -3,8 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from "react-
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import polyline from '@mapbox/polyline';
-import Socket from "../context/Socket";
-
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import Socket from "../context/Socket.js";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -37,7 +39,9 @@ const SetViewToCurrentLocation = ({ coords }) => {
   return null;
 };
 
-const ViewRideMap = ({ ride }) => {
+const ViewRideMap = ({ ride, openModal, setOpenModal, customAlert }) => {
+
+  const navigate = useNavigate()
 
   const [pickupCoords, setPickupCoords] = useState(null);
   const [dropoffCoords, setDropoffCoords] = useState(null);
@@ -139,6 +143,22 @@ const ViewRideMap = ({ ride }) => {
     };
   }, []);
 
+  async function HandleFinishRide() {
+    setOpenModal(false);
+    try {
+      const configuration = {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true
+      }
+      const response = await axios.patch(`${import.meta.env.VITE_BACKEND}/rider/completeride/${ride._id}`, { ridestatus: "completed" }, configuration)
+      customAlert(response.data.message, "success");
+      localStorage.removeItem("ride");
+      Socket.emit("rider:ridefinished",{driverid : ride.driverId})
+      navigate("/rider/")
+    } catch (error) {
+      customAlert(error.response.data.message)
+    }
+  }
 
   return (
     <div style={{ width: '100%', height: '75dvh', margin: 3 }}>
@@ -171,7 +191,7 @@ const ViewRideMap = ({ ride }) => {
             <Popup>Driver Live</Popup>
           </Marker>
         )}
-         {ridercoords && (
+        {ridercoords && (
           <Marker position={ridercoords} icon={ridericon}>
             <Popup>Driver Live</Popup>
           </Marker>
@@ -182,6 +202,15 @@ const ViewRideMap = ({ ride }) => {
         )}
 
       </MapContainer>
+
+      <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+        <DialogTitle>Finish Ride</DialogTitle>
+        <DialogContent>You’ve reached the drop-off point.</DialogContent>
+        <DialogActions>
+          <Button variant="contained" color="success" onClick={HandleFinishRide}>Finish</Button>
+          <Button onClick={() => setOpenModal(false)} color="error">Cancel</Button>
+        </DialogActions>
+      </Dialog>
 
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -21,13 +21,13 @@ const ridericon = L.icon({
 });
 
 
-const LocationMarker = ({ position, setPosition, notify, riderfares }) => {
+const LocationMarker = ({ position, setPosition, customAlert, riderfares }) => {
     const markerRef = useRef(null);
 
     useMapEvents({
         click(e) {
             setPosition(e.latlng);
-            notify("Location pinned successfully!", "success");
+            customAlert("Location pinned successfully!", "success");
         },
     });
 
@@ -36,7 +36,7 @@ const LocationMarker = ({ position, setPosition, notify, riderfares }) => {
             const marker = markerRef.current;
             if (marker != null) {
                 setPosition(marker.getLatLng());
-                notify("Location updated by dragging!", "success");
+                customAlert("Location updated by dragging!", "success");
             }
         },
     };
@@ -69,18 +69,18 @@ const LocationMarker = ({ position, setPosition, notify, riderfares }) => {
     );
 }
 
-function Map({position,setPosition, notify, riderfares }) {
+function Map({position,setPosition, customAlert, riderfares }) {
 
     function getLocation() {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
                 setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
-                notify("Location data is retrieved successfully", "success");
+                customAlert("Location data is retrieved successfully", "success");
             }, (error) => {
-                notify(`Failed: ${error.message}`, "info");
+                customAlert(`Failed: ${error.message}`, "info");
             })
         } else {
-            notify("Geolocation not supported by this browser", "danger");
+            customAlert("Geolocation not supported by this browser", "danger");
         }
     }
 
@@ -91,9 +91,9 @@ function Map({position,setPosition, notify, riderfares }) {
                 withCredentials: true
             }
             const response = await axios.post(`${import.meta.env.VITE_BACKEND}/driver/updatelocation`, position, configuration)
-            notify(response.data.message, 'success')
+            customAlert(response.data.message, 'success')
         } catch (error) {
-            notify(error.response.data.message, 'danger')
+            customAlert(error.response.data.message, 'danger')
         }
     }
 
@@ -107,32 +107,24 @@ function Map({position,setPosition, notify, riderfares }) {
 
     function MapViewUpdater({ position }) {
         const map = useMap();
-
         useEffect(() => {
             map.setView(position, map.getZoom());
         }, [position, map]);
-
         return null;
     }
 
     return (
         <div style={{ width: '100%', height: '70dvh' }}>
-
             <MapContainer center={position} zoom={10} style={{ width: '100%', height: '100%' }}>
-
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
-
                 <MapViewUpdater position={position} />
-
                 <LocationMarker
                     position={position}
                     setPosition={setPosition}
-                    notify={notify}
+                    customAlert={customAlert}
                     riderfares={riderfares}
                 />
-
             </MapContainer>
-
         </div>
     );
 }

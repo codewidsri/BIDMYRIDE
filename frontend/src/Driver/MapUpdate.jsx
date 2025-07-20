@@ -4,11 +4,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-function MapUpdate({ notify }) {
+function MapUpdate({ customAlert }) {
     const [available, setAvailable] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    async function HandleAvailability(event) {
+    async function HandleAvailability() {
         setLoading(true);
         try {
             const config = {
@@ -17,9 +17,9 @@ function MapUpdate({ notify }) {
             };
             const response = await axios.get(`${import.meta.env.VITE_BACKEND}/driver/changeavailability`, config);
             setAvailable(response.data.isavailable);
-            notify(response.data.message, 'success');
+            customAlert(response.data.message, 'success');
         } catch (error) {
-            notify(error.response?.data?.message || "An error occurred", 'danger');
+            customAlert(error.response?.data?.message || "An error occurred", 'danger');
         }
         setLoading(false);
     }
@@ -33,7 +33,7 @@ function MapUpdate({ notify }) {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND}/driver/retrieveavailability`, config);
             setAvailable(response.data.isavailable);
         } catch (error) {
-            notify(error.response?.data?.message || "An error occurred", 'danger');
+            customAlert(error.response?.data?.message || "An error occurred", 'danger');
         }
     }
 

@@ -127,6 +127,54 @@ async function BookRide(req, res, next) {
     }
 }
 
+async function CompleteRide(req, res, next) {
+    try {
+        const ride = await Rides.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: {
+                    ridestatus: "completed"
+                }
+            },
+            { new: true, runValidators: true }
+        )
+        if (!ride) {
+            return res.status(400).json({ message: "Ride was Not Initialised" })
+        }
+        return res.status(200).json({ message: "Ride Completed" });
+    } catch (error) {
+        return res.status(500).json({ message: error.message })
+    }
+}
+
+async function UpdateProfile(req, res, next) {
+    try {
+        const rider = await Riders.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: {
+                    name: req.body.name,
+                    email: req.body.email,
+                    phone: req.body.phone,
+                    address: req.body.address
+                }
+            },
+            { new: true, runValidators: true }
+        );
+        if (!rider) {
+            return res.status(404).json({ message: "Rider not found" })
+        }
+        const riderinfo = {
+            _id: rider._id, name: rider.name, email: rider.email, phone: rider.phone, address: rider.address
+        }
+        const token = jwt.sign({ _id: rider._id, email: rider.email, name: rider.name }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' })
+        res.cookie('rider_token', token, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 })
+        return res.status(201).json({ message: 'Rider Profile Updated', rider: riderinfo })
+    } catch (error) {
+        return res.status(500).json({ message: error.message })
+    }
+}
+
 function Logout(req, res) {
     try {
         res.clearCookie('rider_token', {
@@ -140,4 +188,4 @@ function Logout(req, res) {
     }
 }
 
-export { Register, Login, UpdateLocation, SearchVehicles, BookRide, Logout }
+export { Register, Login, UpdateLocation, SearchVehicles, BookRide, CompleteRide, UpdateProfile, Logout }

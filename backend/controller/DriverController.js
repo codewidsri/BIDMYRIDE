@@ -36,7 +36,7 @@ async function Login(req, res, next) {
         const token = jwt.sign({ _id: existingdriver._id, email: existingdriver.email, name: existingdriver.name }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' })
         res.cookie('driver_token', token, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 })
         const driverinfo = {
-            _id: existingdriver._id, name: existingdriver.name, email: existingdriver.email
+            _id: existingdriver._id, name: existingdriver.name, email: existingdriver.email, phone: existingdriver.phone, address: existingdriver.address, vehiclenumber: existingdriver.vehiclenumber, vehicletype: existingdriver.vehicletype, capacity: existingdriver.capacity
         }
         return res.status(200).json({ message: 'Logged In', driver: driverinfo })
     } catch (error) {
@@ -102,6 +102,37 @@ async function RetrieveAvailability(req, res, next) {
     }
 }
 
+async function UpdateProfile(req, res, next) {
+    try {
+        const driver = await Drivers.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: {
+                    name: req.body.name,
+                    email: req.body.email,
+                    phone: req.body.phone,
+                    address: req.body.address,
+                    vehicletype: req.body.vehicletype,
+                    vehiclenumber: req.body.vehiclenumber,
+                    capacity: req.body.capacity
+                }
+            },
+            { new: true, runValidators: true }
+        )
+        if (!driver) {
+            return res.status(400).json({ message: "Driver Not Found" })
+        }
+        const driverinfo = {
+            _id: driver._id, name: driver.name, email: driver.email, phone: driver.phone, address: driver.address, vehiclenumber: driver.vehiclenumber, vehicletype: driver.vehicletype, capacity: driver.capacity
+        }
+        const token = jwt.sign({ _id: driver._id, email: driver.email, name: driver.name }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' })
+        res.cookie('driver_token', token, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 })
+        return res.status(201).json({ message: "Driver Profile Updated", driver: driverinfo })
+    } catch (error) {
+        return res.status(500).json({ message: error.message })
+    }
+}
+
 async function VerifyOTP(req, res, next) {
     try {
         const { rideid, enteredOtp } = req.body;
@@ -133,4 +164,4 @@ async function Logout(req, res) {
     }
 }
 
-export { Register, Login, UpdateLocation, ChangeAvailabilty, RetrieveAvailability, VerifyOTP, Logout }
+export { Register, Login, UpdateLocation, ChangeAvailabilty, RetrieveAvailability, UpdateProfile, VerifyOTP, Logout }

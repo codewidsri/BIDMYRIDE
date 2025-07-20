@@ -5,8 +5,8 @@ import RiderRegister from './pages/RiderRegister.jsx'
 import DriverLogin from './pages/DriverLogin.jsx';
 import DriverRegister from './pages/DriverRegister.jsx'
 import ProtectedRoute from './context/ProtectedRoute.jsx'
-import RiderHome from './Rider/RiderHome.jsx';
-import DriverHome from './Driver/DriverHome.jsx';
+import Rider from './Rider/Rider.jsx';
+import Driver from './Driver/Driver.jsx';
 
 function App() {
   return (
@@ -18,12 +18,12 @@ function App() {
       <Route path='/driverregister' element={<DriverRegister />} />
       <Route path='/rider/*' element={
         <ProtectedRoute allowedrole={'rider'}>
-          <RiderHome />
+          <Rider />
         </ProtectedRoute>
       } />
       <Route path='/driver/*' element={
         <ProtectedRoute allowedrole={'driver'}>
-          <DriverHome />
+          <Driver />
         </ProtectedRoute>
       } />
     </Routes>

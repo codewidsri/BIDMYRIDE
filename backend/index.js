@@ -2,22 +2,23 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import https from "https";
+import http from "http";
 import { Server } from "socket.io";
 import ConnectDatabase from "./database/ConnectDatabase.js";
 import Rider from "./routes/RiderRoute.js";
 import Driver from "./routes/DriverRoute.js";
-import fs from "fs";
+import fs from 'fs';
 
 dotenv.config();
 
-const sslOptions = {
-    key: fs.readFileSync("./key.pem"),
-    cert: fs.readFileSync("./cert.pem"),
-};
+// const sslOptions = {
+//     key: fs.readFileSync("./key.pem"),
+//     cert: fs.readFileSync("./cert.pem"),
+// };
 
 const app = express();
-const server = https.createServer(sslOptions, app);
+// const server = https.createServer(sslOptions, app);
+const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: [process.env.VITE_FRONTEND, "https://localhost:5173"],
@@ -69,10 +70,10 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("driver:ridestarted", ({ riderid, driverid }) => {
+    socket.on("driver:ridestarted", ({ riderid }) => {
         const ridersocket = onlineriders[riderid];
         if (ridersocket) {
-            io.to(ridersocket).emit("rider:ridestarted", { driverid })
+            io.to(ridersocket).emit("rider:ridestarted")
         }
     })
 
@@ -87,6 +88,20 @@ io.on("connection", (socket) => {
         const ridersocket = onlineriders[riderid];
         if (ridersocket) {
             io.to(ridersocket).emit("rider:driverlivelocation", { drivercoords })
+        }
+    })
+
+    socket.on("driver:ridefinished", ({ riderid }) => {
+        const ridersocket = onlineriders[riderid]
+        if (ridersocket) {
+            io.to(ridersocket).emit("rider:driverridefinished")
+        }
+    })
+
+    socket.on("rider:ridefinished",({driverid})=>{
+        const driversocket = onlinedrivers[driverid]
+        if(driversocket){
+            io.to(driversocket).emit("driver:riderridefinshed")
         }
     })
 
@@ -115,6 +130,10 @@ ConnectDatabase();
 app.use("/api/rider", Rider);
 app.use("/api/driver", Driver);
 
-server.listen(process.env.PORT, "0.0.0.0", () => {
+// server.listen(process.env.PORT, "0.0.0.0", () => {
+//     console.log(`Server is running on port ${process.env.PORT}`);
+// });
+
+server.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 });

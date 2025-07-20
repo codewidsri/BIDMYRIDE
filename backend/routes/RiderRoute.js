@@ -1,5 +1,5 @@
 import express from "express";
-import { Register, Login, Logout, SearchVehicles, UpdateLocation, BookRide } from "../controller/RiderController.js";
+import { Register, Login, Logout, SearchVehicles, UpdateLocation, BookRide, UpdateProfile, CompleteRide } from "../controller/RiderController.js";
 import VerifyRider from "../middlewares/VerifyRider.js"
 
 const router = express.Router()
@@ -12,6 +12,8 @@ router.route('/verify').get(VerifyRider, (req, res) => {
 router.route('/updatelocation').post(VerifyRider, UpdateLocation)
 router.route('/searchvehicles').get(VerifyRider, SearchVehicles)
 router.route('/bookride').post(VerifyRider, BookRide)
+router.route('/completeride/:id').patch(VerifyRider, CompleteRide)
+router.route('/updateprofile/:id').patch(VerifyRider, UpdateProfile)
 router.route('/logout').post(Logout)
 
 export default router;

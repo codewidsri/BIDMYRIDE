@@ -97,7 +97,7 @@ const ViewRideMap = ({ ride }) => {
     function getLiveLocation() {
         if ('geolocation' in navigator) {
             const id = navigator.geolocation.watchPosition(
-               async (position) => {
+                async (position) => {
                     const current = { lat: position.coords.latitude, lng: position.coords.longitude };
                     setdrivercoords(current);
                     Socket.emit("driver:driverlivelocation", { drivercoords, riderid: ride.riderId })
@@ -205,7 +205,7 @@ const ViewRideMap = ({ ride }) => {
                 <DialogContent>You’ve reached the drop-off point.</DialogContent>
                 <DialogActions>
                     <Button variant="contained" color="success" onClick={() => {
-                        Socket.emit("driver:ridefinished", { rideid: ride._id, driverid: ride.driverId });
+                        Socket.emit("driver:ridefinished", { riderid: ride.riderId });
                         setOpenModal(false);
                     }}>Finish</Button>
                     <Button onClick={() => setOpenModal(false)} color="error">Cancel</Button>

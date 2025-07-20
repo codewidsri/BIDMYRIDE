@@ -1,10 +1,11 @@
 import { Avatar, Box, Button, Card, CardContent, Container, Divider, Grid, TextField, Typography } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContextProvider";
+import axios from "axios";
 
-function RiderProfile() {
-    const { user } = useContext(AuthContext);
+function RiderProfile({customAlert}) {
+    const { user, dispatch } = useContext(AuthContext);
 
     const fallbackRider = {
         name: user.name,
@@ -21,11 +22,20 @@ function RiderProfile() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setProfile(form);
         setEditMode(false);
-        // ✅ OPTIONAL: Make API call to update data on backend
-        // await axios.post('/api/updateRiderProfile', form)
+        try {
+            const configuration = {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
+            }
+            const response = await axios.patch(`${import.meta.env.VITE_BACKEND}/rider/updateprofile/${user._id}`, form, configuration);
+            customAlert(response.data.message, "success")
+            dispatch({ type: "loginsuccess", payload: { user: response.data.rider, role: "rider" } })
+        } catch (error) {
+            customAlert(error.response.data.message)
+        }
     };
 
     return (
@@ -34,10 +44,10 @@ function RiderProfile() {
                 <CardContent>
                     <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
                         <Avatar sx={{ bgcolor: deepPurple[500], width: 80, height: 80, mb: 1 }}>
-                            {profile.name[0]}
+                            {profile.name[0].toUpperCase()}
                         </Avatar>
                         <Typography variant="h5" fontWeight="bold">
-                            {profile.name}
+                            {profile.name.toUpperCase()}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
                             Rider Profile

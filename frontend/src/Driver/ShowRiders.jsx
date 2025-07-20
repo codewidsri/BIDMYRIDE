@@ -1,9 +1,9 @@
 import RiderInfo from "./RiderInfo.jsx";
 
-function ShowRiders({ riderfares , acceptedride}) {
+function ShowRiders({ riders , acceptedride}) {
     return (
         <>
-            {riderfares && riderfares.map((rider) => (
+            {riders && riders.map((rider) => (
                 <RiderInfo rider={rider} acceptedride={acceptedride} />
             ))}
         </>

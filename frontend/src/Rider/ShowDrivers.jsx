@@ -34,7 +34,6 @@ function ShowDrivers({ showdrivers, driverfares, pickup, dropoff, pickupCoords, 
       const rideid = response.data.ride._id;
       Socket.emit("rider:confirmride", { rideid, riderid, driverid, fare });
       localStorage.setItem('ride', JSON.stringify(response.data.ride))
-      console.log(response.data.ride)
       navigate('/rider/viewride', {
         state: {
           ride: response.data.ride

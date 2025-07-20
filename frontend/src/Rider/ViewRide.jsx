@@ -3,28 +3,25 @@ import ViewRideMap from "./ViewRideMap.jsx";
 import ViewOTP from "./ViewOTP.jsx";
 import { useEffect, useState } from "react";
 import Socket from "../context/Socket.js";
-import CustomAlert from "../components/CustomAlert.jsx";
 
-function ViewRide() {
+function ViewRide({ customAlert }) {
     const location = useLocation();
     const { ride } = location.state || {};
-
-    const [alert, setAlert] = useState({ open: false, message: '', variant: 'success' });
-    const customAlert = (message, variant = 'info') => {
-        setAlert({ open: true, message, variant });
-    };
+    const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
-        Socket.on("rider:ridestarted", ({ driverid }) => {
+        Socket.on("rider:ridestarted", () => {
             customAlert("Ride Started")
+        })
+        Socket.on("rider:driverridefinished", () => {
+            setOpenModal(true)
         })
     }, [])
 
     return (
         <>
-            <CustomAlert open={alert.open} message={alert.message} variant={alert.variant} onClose={() => setAlert({ ...alert, open: false })} />
             <ViewOTP otp={ride.otp} />
-            <ViewRideMap ride={ride} />
+            <ViewRideMap ride={ride} openModal={openModal} setOpenModal={setOpenModal} customAlert={customAlert} />
         </>
     )
 }

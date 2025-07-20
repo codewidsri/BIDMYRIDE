@@ -5,7 +5,7 @@ import ShowDrivers from "./ShowDrivers.jsx";
 import Socket from "../context/Socket.js";
 import CustomAlert from "../components/CustomAlert.jsx";
 
-function RiderIndex() {
+function RiderIndex({customAlert}) {
 
     const [pickup, setPickup] = useState('');
     const [dropoff, setDropoff] = useState('');
@@ -19,11 +19,6 @@ function RiderIndex() {
     const [showdrivers, setshowdrivers] = useState(null);
     const [driverfares, setdriverfares] = useState({});
 
-    const [alert, setAlert] = useState({ open: false, message: '', variant: 'success' });
-    const customAlert = (message, variant = 'info') => {
-        setAlert({ open: true, message, variant });
-    };
-
     useEffect(() => {
         Socket.on('rider:receivefare', ({ driverid, fare }) => {
             setdriverfares((prev) => ({ ...prev, [driverid]: fare }))
@@ -36,9 +31,6 @@ function RiderIndex() {
 
     return (
         <>
-
-            <CustomAlert  open={alert.open} message={alert.message} variant={alert.variant} onClose={() => setAlert({ ...alert, open: false })} />
-
             <RiderMapForm
                 pickup={pickup}
                 setPickup={setPickup}
@@ -59,7 +51,6 @@ function RiderIndex() {
             <Map setPickup={setPickup} pickupCoords={pickupCoords} setPickupCoords={setPickupCoords} dropoffCoords={dropoffCoords} setDistance={setDistance} showdrivers={showdrivers} customAlert={customAlert} />
 
             <ShowDrivers showdrivers={showdrivers} driverfares={driverfares} pickup={pickup} dropoff={dropoff} pickupCoords={pickupCoords} dropoffCoords={dropoffCoords} vehicle={vehicle} distance={distance} customAlert={customAlert} />
-
         </>
     )
 }
